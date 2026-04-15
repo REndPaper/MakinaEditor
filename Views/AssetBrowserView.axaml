@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MakinaEditor.ViewModels"
+             xmlns:models="using:MakinaEditor.Models"
+             x:Class="MakinaEditor.Views.AssetBrowserView"
+             x:DataType="vm:MainWindowViewModel"> <Border Background="#252526" BorderBrush="#3D3D3D" BorderThickness="0,0,1,0">
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5" Spacing="5">
+                <TextBlock Text="PROJECT ASSETS" VerticalAlignment="Center" 
+                        FontSize="11" FontWeight="Bold" Foreground="#858585"/>
+                <Button Content="📂" Padding="5,2" Background="Transparent" 
+                        Click="OpenFolder_Click" ToolTip.Tip="프로젝트 열기"/>
+            </StackPanel>
+            
+            <TreeView ItemsSource="{Binding ProjectAssets}" Background="Transparent" BorderThickness="0">
+                <TreeView.ItemTemplate>
+                    <TreeDataTemplate ItemsSource="{Binding Children}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="📁" FontSize="12" IsVisible="{Binding IsFolder}" Foreground="#CCA700"/>
+                            <TextBlock Text="📄" FontSize="12" IsVisible="{Binding IsNotFolder}" Foreground="#858585"/>
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </TreeDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </DockPanel>
+    </Border>
+</UserControl>

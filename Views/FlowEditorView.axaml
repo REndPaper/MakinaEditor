@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MakinaEditor.ViewModels"
+             xmlns:models="using:MakinaEditor.Models"
+             x:Class="MakinaEditor.Views.FlowEditorView"
+             x:DataType="vm:MainWindowViewModel">
+
+    <DockPanel Margin="10">
+        <Button DockPanel.Dock="Top" Content="+" 
+                Width="32" Height="32" CornerRadius="16"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Margin="0,0,0,10" Background="#3D3D3D">
+            <Button.Flyout>
+                <MenuFlyout Placement="Bottom">
+                    <MenuItem Header="대사 추가" Command="{Binding AddTextCommand}" CommandParameter="{x:Null}"/>
+                    <MenuItem Header="배경 추가" Command="{Binding AddBgCommand}" CommandParameter="{x:Null}"/>
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>
+
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding ActiveUserFlow}">
+                <ItemsControl.DataTemplates>
+                    
+                    <DataTemplate x:DataType="models:TextCommand">
+                        <StackPanel>
+                            <Border Background="#333333" CornerRadius="5" Padding="10" Margin="0,5">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <StackPanel Grid.Column="0" Spacing="5">
+                                        <TextBlock Text="💬 PRINT_TEXT" Foreground="#4DB6AC" FontWeight="Bold" FontSize="10"/>
+                                        <TextBox Text="{Binding Speaker}" PlaceholderText="화자" Background="Transparent" BorderThickness="0"/>
+                                        <TextBox Text="{Binding TextContent}" PlaceholderText="대사 내용" Background="#252526" BorderThickness="0" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Content="✕" VerticalAlignment="Top"
+                                            Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}"
+                                            CommandParameter="{Binding}"
+                                            Background="Transparent" Foreground="#FF5555"/>
+                                </Grid>
+                            </Border>
+                            <Button Content="+" Width="24" Height="24" CornerRadius="12"
+                                    HorizontalAlignment="Center" Opacity="0.5" Margin="0,2">
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuItem Header="대사 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="배경 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+
+                    <DataTemplate x:DataType="models:BgCommand">
+                        <StackPanel>
+                            <Border Background="#2C3E50" CornerRadius="5" Padding="10" Margin="0,5">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <StackPanel Grid.Column="0" Spacing="5">
+                                        <TextBlock Text="🌆 SET_BG" Foreground="#E74C3C" FontWeight="Bold" FontSize="10"/>
+                                        <TextBox Text="{Binding AssetId}" PlaceholderText="에셋 ID" Background="#1A252F" BorderThickness="0"/>
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Content="✕" VerticalAlignment="Top"
+                                            Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}"
+                                            CommandParameter="{Binding}"
+                                            Background="Transparent" Foreground="#FF5555"/>
+                                </Grid>
+                            </Border>
+                            <Button Content="+" Width="24" Height="24" CornerRadius="12"
+                                    HorizontalAlignment="Center" Opacity="0.5" Margin="0,2">
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuItem Header="대사 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="배경 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+
+                </ItemsControl.DataTemplates>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

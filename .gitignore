@@ -1,0 +1,5 @@
+# 만약 .gitignore가 없다면 최상위에 만들고 아래 내용 추가
+bin/
+obj/
+*.user
+last_project.txt # 이건 형진 님 로컬 경로라 커밋에서 빼는 게 좋아요!

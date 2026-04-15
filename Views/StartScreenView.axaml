@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MakinaEditor.ViewModels"
+             x:Class="MakinaEditor.Views.StartScreenView"
+             x:DataType="vm:MainWindowViewModel">
+
+    <Grid ColumnDefinitions="*, 350" Background="#1E1E1E">
+        <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="30">
+            <StackPanel Spacing="5" HorizontalAlignment="Center">
+                <TextBlock Text="MAKINA ENGINE" FontSize="42" FontWeight="Black" Foreground="#4DB6AC"/>
+                <TextBlock Text="Integrated Development Environment" FontSize="14" Foreground="#858585" HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Spacing="10" Width="300">
+                <Button Content="🆕 새 프로젝트 생성" Height="45" 
+                        HorizontalAlignment="Stretch" 
+                        HorizontalContentAlignment="Center" 
+                        Background="#2D2D2D"
+                        Click="CreateProject_Click"/>
+                <Button Content="📂 프로젝트 폴더 열기" Height="45" HorizontalAlignment="Stretch" 
+                        HorizontalContentAlignment="Center" Background="#2D2D2D"
+                        Click="OpenFolder_Click"/> </StackPanel>
+        </StackPanel>
+
+        <Border Grid.Column="1" Background="#252526" Padding="20">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="RECENT PROJECTS" Margin="0,0,0,20" 
+                           FontSize="12" FontWeight="Bold" Foreground="#858585"/>
+                
+                <ListBox ItemsSource="{Binding RecentProjects}" Background="Transparent" BorderThickness="0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Button Background="Transparent" HorizontalAlignment="Stretch" Padding="5"
+                                    Command="{Binding $parent[UserControl].((vm:MainWindowViewModel)DataContext).OpenProjectFolder}"
+                                    CommandParameter="{Binding}">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Path}" FontSize="11" Foreground="#666666" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>
