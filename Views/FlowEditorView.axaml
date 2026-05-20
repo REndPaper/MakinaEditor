@@ -6,77 +6,166 @@
              x:DataType="vm:MainWindowViewModel">
 
     <DockPanel Margin="10">
-        <Button DockPanel.Dock="Top" Content="+" 
-                Width="32" Height="32" CornerRadius="16"
-                HorizontalAlignment="Center" VerticalAlignment="Center"
-                Margin="0,0,0,10" Background="#3D3D3D">
+        <!-- 상단 플로우 명령어 추가 버튼 -->
+        <Button DockPanel.Dock="Top" Content="➕ 연출 명령어 추가" 
+                Height="36" CornerRadius="4"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                Margin="0,0,0,10" Background="#2A2A2B" BorderBrush="#3D3D3D" BorderThickness="1">
             <Button.Flyout>
                 <MenuFlyout Placement="Bottom">
-                    <MenuItem Header="대사 추가" Command="{Binding AddTextCommand}" CommandParameter="{x:Null}"/>
-                    <MenuItem Header="배경 추가" Command="{Binding AddBgCommand}" CommandParameter="{x:Null}"/>
+                    <MenuItem Header="💬 대사 출력 추가" Command="{Binding AddTextCommand}" CommandParameter="{x:Null}"/>
+                    <MenuItem Header="🌆 배경 설정 추가" Command="{Binding AddBgCommand}" CommandParameter="{x:Null}"/>
+                    <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding AddCharCommand}" CommandParameter="{x:Null}"/>
+                    <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding AddBgmCommand}" CommandParameter="{x:Null}"/>
                 </MenuFlyout>
             </Button.Flyout>
         </Button>
 
-        <ScrollViewer>
-            <ItemsControl ItemsSource="{Binding ActiveUserFlow}">
-                <ItemsControl.DataTemplates>
-                    
-                    <DataTemplate x:DataType="models:TextCommand">
-                        <StackPanel>
-                            <Border Background="#333333" CornerRadius="5" Padding="10" Margin="0,5">
-                                <Grid ColumnDefinitions="*, Auto">
-                                    <StackPanel Grid.Column="0" Spacing="5">
-                                        <TextBlock Text="💬 PRINT_TEXT" Foreground="#4DB6AC" FontWeight="Bold" FontSize="10"/>
-                                        <TextBox Text="{Binding Speaker}" PlaceholderText="화자" Background="Transparent" BorderThickness="0"/>
-                                        <TextBox Text="{Binding TextContent}" PlaceholderText="대사 내용" Background="#252526" BorderThickness="0" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="1" Content="✕" VerticalAlignment="Top"
-                                            Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}"
-                                            CommandParameter="{Binding}"
-                                            Background="Transparent" Foreground="#FF5555"/>
-                                </Grid>
-                            </Border>
-                            <Button Content="+" Width="24" Height="24" CornerRadius="12"
-                                    HorizontalAlignment="Center" Opacity="0.5" Margin="0,2">
-                                <Button.Flyout>
-                                    <MenuFlyout>
-                                        <MenuItem Header="대사 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="배경 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
-                                    </MenuFlyout>
-                                </Button.Flyout>
-                            </Button>
-                        </StackPanel>
-                    </DataTemplate>
+        <!-- 타임라인 리스트박스 -->
+        <ListBox ItemsSource="{Binding ActiveUserFlow}" 
+                 SelectedItem="{Binding SelectedCommand, Mode=TwoWay}"
+                 Background="Transparent" BorderThickness="0">
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Margin" Value="0,0,0,10"/>
+                </Style>
+                <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                    <Setter Property="Background" Value="Transparent"/>
+                </Style>
+            </ListBox.Styles>
+            
+            <ListBox.DataTemplates>
+                <!-- 1. 대사 출력 (PRINT_TEXT) -->
+                <DataTemplate x:DataType="models:TextCommand">
+                    <StackPanel>
+                        <Border Background="#2B2B2C" BorderBrush="#4DB6AC" BorderThickness="1,0,0,0" CornerRadius="4" Padding="10">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <StackPanel Grid.Column="0" Spacing="6">
+                                    <TextBlock Text="💬 PRINT_TEXT" Foreground="#4DB6AC" FontWeight="Bold" FontSize="10"/>
+                                    <TextBox Text="{Binding Speaker}" PlaceholderText="화자 이름" Background="#1E1E1F" BorderThickness="0" Height="26" FontSize="11" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding TextContent}" PlaceholderText="대사 내용" Background="#1E1E1F" BorderThickness="0" TextWrapping="Wrap" AcceptsReturn="True" FontSize="11"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="✕" VerticalAlignment="Top" Margin="5,0,0,0"
+                                        Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent" Foreground="#FF5555"/>
+                            </Grid>
+                        </Border>
+                        
+                        <!-- 인라인 추가 버튼 -->
+                        <Button Content="➕" Width="22" Height="22" CornerRadius="11"
+                                HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
 
-                    <DataTemplate x:DataType="models:BgCommand">
-                        <StackPanel>
-                            <Border Background="#2C3E50" CornerRadius="5" Padding="10" Margin="0,5">
-                                <Grid ColumnDefinitions="*, Auto">
-                                    <StackPanel Grid.Column="0" Spacing="5">
-                                        <TextBlock Text="🌆 SET_BG" Foreground="#E74C3C" FontWeight="Bold" FontSize="10"/>
-                                        <TextBox Text="{Binding AssetId}" PlaceholderText="에셋 ID" Background="#1A252F" BorderThickness="0"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="1" Content="✕" VerticalAlignment="Top"
-                                            Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}"
-                                            CommandParameter="{Binding}"
-                                            Background="Transparent" Foreground="#FF5555"/>
-                                </Grid>
-                            </Border>
-                            <Button Content="+" Width="24" Height="24" CornerRadius="12"
-                                    HorizontalAlignment="Center" Opacity="0.5" Margin="0,2">
-                                <Button.Flyout>
-                                    <MenuFlyout>
-                                        <MenuItem Header="대사 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="배경 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
-                                    </MenuFlyout>
-                                </Button.Flyout>
-                            </Button>
-                        </StackPanel>
-                    </DataTemplate>
+                <!-- 2. 배경 설정 (SET_BG) -->
+                <DataTemplate x:DataType="models:BgCommand">
+                    <StackPanel>
+                        <Border Background="#252F3B" BorderBrush="#E74C3C" BorderThickness="1,0,0,0" CornerRadius="4" Padding="10">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <StackPanel Grid.Column="0" Spacing="6">
+                                    <TextBlock Text="🌆 SET_BG" Foreground="#E74C3C" FontWeight="Bold" FontSize="10"/>
+                                    <TextBox Text="{Binding AssetId}" PlaceholderText="배경 에셋 ID (예: school_corridor)" Background="#171D26" BorderThickness="0" Height="26" FontSize="11" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="✕" VerticalAlignment="Top" Margin="5,0,0,0"
+                                        Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent" Foreground="#FF5555"/>
+                            </Grid>
+                        </Border>
+                        
+                        <Button Content="➕" Width="22" Height="22" CornerRadius="11"
+                                HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
 
-                </ItemsControl.DataTemplates>
-            </ItemsControl>
-        </ScrollViewer>
+                <!-- 3. 캐릭터 설정 (SHOW_CHAR) -->
+                <DataTemplate x:DataType="models:ShowCharCommand">
+                    <StackPanel>
+                        <Border Background="#31263E" BorderBrush="#9B59B6" BorderThickness="1,0,0,0" CornerRadius="4" Padding="10">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <StackPanel Grid.Column="0" Spacing="6">
+                                    <TextBlock Text="🎭 SHOW_CHAR" Foreground="#9B59B6" FontWeight="Bold" FontSize="10"/>
+                                    <TextBox Text="{Binding CharacterId}" PlaceholderText="캐릭터 ID (예: jiwoo)" Background="#1F1826" BorderThickness="0" Height="26" FontSize="11" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Pose}" PlaceholderText="포즈/표정 (예: smile)" Background="#1F1826" BorderThickness="0" Height="26" FontSize="11" VerticalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding Position}" PlaceholderText="위치 (Left, Center, Right, Hide)" Background="#1F1826" BorderThickness="0" Height="26" FontSize="11" VerticalContentAlignment="Center"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="✕" VerticalAlignment="Top" Margin="5,0,0,0"
+                                        Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent" Foreground="#FF5555"/>
+                            </Grid>
+                        </Border>
+                        
+                        <Button Content="➕" Width="22" Height="22" CornerRadius="11"
+                                HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+
+                <!-- 4. BGM 재생 (PLAY_BGM) -->
+                <DataTemplate x:DataType="models:PlayBgmCommand">
+                    <StackPanel>
+                        <Border Background="#1C322C" BorderBrush="#1ABC9C" BorderThickness="1,0,0,0" CornerRadius="4" Padding="10">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <StackPanel Grid.Column="0" Spacing="6">
+                                    <TextBlock Text="🎵 PLAY_BGM" Foreground="#1ABC9C" FontWeight="Bold" FontSize="10"/>
+                                    <TextBox Text="{Binding AssetId}" PlaceholderText="BGM 에셋 ID (예: bgm_peaceful)" Background="#12211D" BorderThickness="0" Height="26" FontSize="11" VerticalContentAlignment="Center"/>
+                                    <Grid ColumnDefinitions="Auto, *">
+                                        <TextBlock Text="볼륨: " Foreground="#858585" FontSize="10" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <Slider Grid.Column="1" Value="{Binding Volume}" Minimum="0" Maximum="1" Height="20"/>
+                                    </Grid>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="✕" VerticalAlignment="Top" Margin="5,0,0,0"
+                                        Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent" Foreground="#FF5555"/>
+                            </Grid>
+                        </Border>
+                        
+                        <Button Content="➕" Width="22" Height="22" CornerRadius="11"
+                                HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                    <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.DataTemplates>
+        </ListBox>
     </DockPanel>
 </UserControl>

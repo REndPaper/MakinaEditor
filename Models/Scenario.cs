@@ -17,10 +17,15 @@ public class MakinaScenario
     // Value: 화면 연출 OP코드 배열
     public Dictionary<string, ObservableCollection<FlowCommand>> UserFlows { get; }
 
-    public MakinaScenario(string name)
+    public MakinaScenario()
     {
-        ScenarioName = name;
+        ScenarioName = "Untitled";
         KernelRoutines = new Dictionary<string, ObservableCollection<ScenarioCommand>>();
         UserFlows = new Dictionary<string, ObservableCollection<FlowCommand>>();
+    }
+
+    public MakinaScenario(string name) : this()
+    {
+        ScenarioName = name;
     }
 }

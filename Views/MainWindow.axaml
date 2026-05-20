@@ -10,12 +10,18 @@
     <Panel>
         <views:StartScreenView IsVisible="{Binding !IsProjectLoaded}"/>
         <DockPanel IsVisible="{Binding IsProjectLoaded}">
+            <!-- 상단 헤더 영역 -->
             <Border DockPanel.Dock="Top" Height="45" Background="#2D2D2D" BorderBrush="#1E1E1E" BorderThickness="0,0,0,1">
                 <Grid ColumnDefinitions="Auto, *, Auto">
                     
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
-                        <TextBlock Text="⚙️" Margin="0,0,8,0" Foreground="#4DB6AC"/>
-                        <TextBlock Text="{Binding ProjectName}" FontWeight="Bold" Foreground="#DCDCDC"/>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0" Spacing="10">
+                        <TextBlock Text="⚙️" VerticalAlignment="Center" Foreground="#4DB6AC"/>
+                        <TextBlock Text="{Binding ProjectName}" FontWeight="Bold" VerticalAlignment="Center" Foreground="#DCDCDC"/>
+                        
+                        <Border Width="1" Height="16" Background="#40FFFFFF" Margin="5,0"/>
+                        
+                        <TextBlock Text="🎬 시나리오:" VerticalAlignment="Center" Foreground="#858585" FontSize="11"/>
+                        <ComboBox ItemsSource="{Binding Scenarios}" SelectedItem="{Binding SelectedScenarioName}" Height="28" Background="#1E1E1E" BorderThickness="1" BorderBrush="#3D3D3D"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="2">
@@ -25,21 +31,127 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="15,0" Spacing="10">
-                        <Button Content="💾" ToolTip.Tip="저장" Background="Transparent"/>
-                        <Button Content="▶️" ToolTip.Tip="컴파일 및 실행" Foreground="#4CAF50" Background="Transparent"/>
+                        <Button Content="💾 저장" Command="{Binding SaveProject}" ToolTip.Tip="프로젝트 및 시나리오 저장" Foreground="#4DB6AC" Background="Transparent"/>
+                        <Button Content="▶️ 실행" ToolTip.Tip="컴파일 및 실행" Foreground="#4CAF50" Background="Transparent"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
+            <!-- 하단 상태 바 -->
+            <Border DockPanel.Dock="Bottom" Height="24" Background="#1A1A1C" BorderBrush="#2D2D2D" BorderThickness="0,1,0,0">
+                <Grid ColumnDefinitions="*, Auto" Margin="10,0">
+                    <TextBlock Grid.Column="0" Text="{Binding StatusText}" Foreground="#959595" FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="Makina VN Engine v1.0.0" Foreground="#555555" FontSize="11" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- 메인 에디터 워크스페이스 -->
             <Grid>
                 <Grid ColumnDefinitions="2*, 5*, 3*" IsVisible="{Binding IsFlowMode}">
+                    <!-- 에셋 브라우저 -->
                     <views:AssetBrowserView Grid.Column="0"/>
-                    <Border Grid.Column="1" Background="Black" Margin="10">
-                        <TextBlock Text="PREVIEW" Foreground="#00FF00" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
+                    
+                    <!-- 인터랙티브 프리뷰 시뮬레이터 -->
+                    <DockPanel Grid.Column="1" Margin="10">
+                        <!-- 프리뷰 조작 컨트롤러 -->
+                        <Border DockPanel.Dock="Top" Height="40" Background="#252526" CornerRadius="4,4,0,0" BorderBrush="#3D3D3D" BorderThickness="1,1,1,0">
+                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="8,0" Spacing="2">
+                                    <Button Content="⏮️" Command="{Binding SelectPrevCommand}" ToolTip.Tip="이전 연출" Background="Transparent" BorderThickness="0"/>
+                                    <Button Command="{Binding TogglePlayPreview}" ToolTip.Tip="재생/일시정지" Width="36" Background="Transparent" BorderThickness="0">
+                                        <Panel>
+                                            <TextBlock Text="▶️" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding !IsPreviewPlaying}"/>
+                                            <TextBlock Text="⏸️" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding IsPreviewPlaying}"/>
+                                        </Panel>
+                                    </Button>
+                                    <Button Content="⏭️" Command="{Binding SelectNextCommand}" ToolTip.Tip="다음 연출" Background="Transparent" BorderThickness="0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10,0" Spacing="15" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding PreviewBgm, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                        <TextBlock Text="🎵" Foreground="#E74C3C" FontSize="11"/>
+                                        <TextBlock Text="{Binding PreviewBgm}" Foreground="#E74C3C" FontSize="11" FontWeight="Bold"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding PreviewShader, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                        <TextBlock Text="✨" Foreground="#9B59B6" FontSize="11"/>
+                                        <TextBlock Text="{Binding PreviewShader}" Foreground="#9B59B6" FontSize="11"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- 가상 VN 디스플레이 화면 -->
+                        <Border Background="#111112" CornerRadius="0,0,4,4" BorderBrush="#3D3D3D" BorderThickness="1">
+                            <Panel>
+                                <!-- 배경 드로잉 레이어 -->
+                                <Panel>
+                                    <Border Background="#1E272C" IsVisible="{Binding PreviewBg, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+                                    <Border Background="#2C3E50" IsVisible="{Binding PreviewBg, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                    
+                                    <Border HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" Padding="8,4" Background="#80000000" CornerRadius="3">
+                                        <TextBlock Text="{Binding PreviewBg, StringFormat='🌆 배경: {0}', FallbackValue='🌆 배경: 없음'}" Foreground="White" FontSize="11"/>
+                                    </Border>
+                                </Panel>
+
+                                <!-- 캐릭터 슬롯 배치 Grid -->
+                                <Grid ColumnDefinitions="*, *, *" Margin="20,40,20,120">
+                                    <!-- Left 슬롯 -->
+                                    <Border Grid.Column="0" IsVisible="{Binding PreviewLeftChar, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" 
+                                            Background="#25FFFFFF" BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="6" Margin="15,0" Width="110" Height="220" VerticalAlignment="Bottom">
+                                        <Grid RowDefinitions="*, Auto">
+                                            <TextBlock Grid.Row="0" Text="👤" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#40FFFFFF"/>
+                                            <Border Grid.Row="1" Background="#A02C3E50" Padding="4" CornerRadius="0,0,5,5">
+                                                <TextBlock Text="{Binding PreviewLeftChar}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Center 슬롯 -->
+                                    <Border Grid.Column="1" IsVisible="{Binding PreviewCenterChar, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" 
+                                            Background="#25FFFFFF" BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="6" Margin="15,0" Width="110" Height="220" VerticalAlignment="Bottom">
+                                        <Grid RowDefinitions="*, Auto">
+                                            <TextBlock Grid.Row="0" Text="👤" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#40FFFFFF"/>
+                                            <Border Grid.Row="1" Background="#A02C3E50" Padding="4" CornerRadius="0,0,5,5">
+                                                <TextBlock Text="{Binding PreviewCenterChar}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Right 슬롯 -->
+                                    <Border Grid.Column="2" IsVisible="{Binding PreviewRightChar, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" 
+                                            Background="#25FFFFFF" BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="6" Margin="15,0" Width="110" Height="220" VerticalAlignment="Bottom">
+                                        <Grid RowDefinitions="*, Auto">
+                                            <TextBlock Grid.Row="0" Text="👤" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#40FFFFFF"/>
+                                            <Border Grid.Row="1" Background="#A02C3E50" Padding="4" CornerRadius="0,0,5,5">
+                                                <TextBlock Text="{Binding PreviewRightChar}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 하단 세미글래스 대사 렌더러 -->
+                                <Border VerticalAlignment="Bottom" Height="90" Margin="12" Padding="12,8" CornerRadius="6" BorderBrush="#30FFFFFF" BorderThickness="1">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="#000000" Opacity="0.75"/>
+                                    </Border.Background>
+                                    <Grid RowDefinitions="Auto, *">
+                                        <Border Grid.Row="0" HorizontalAlignment="Left" Background="#4DB6AC" CornerRadius="2" Padding="6,1" Margin="0,0,0,4"
+                                                IsVisible="{Binding PreviewSpeaker, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                            <TextBlock Text="{Binding PreviewSpeaker}" FontWeight="Bold" Foreground="White" FontSize="10"/>
+                                        </Border>
+                                        
+                                        <TextBlock Grid.Row="1" Text="{Binding PreviewText}" Foreground="#F0F0F0" FontSize="12" TextWrapping="Wrap" LineHeight="16"/>
+                                    </Grid>
+                                </Border>
+                            </Panel>
+                        </Border>
+                    </DockPanel>
+
+                    <!-- 타임라인 편집기 -->
                     <views:FlowEditorView Grid.Column="2"/>
                 </Grid>
 
+                <!-- 기타 편집 모드 뷰홀더 -->
                 <Grid IsVisible="{Binding IsScenarioMode}">
                     <TextBlock Text="Scenario Node Graph Editor (Coming Soon)" Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
