@@ -15,12 +15,19 @@ public partial class NewProjectWindow : Window
     {
         InitializeComponent();
         
-        // 기본 저장 위치 설정 (내 문서)
-        string defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        var locationTextBox = this.FindControl<TextBox>("LocationTextBox");
-        if (locationTextBox != null)
+        // 기본 저장 위치 설정 (안전하게 BaseDirectory 사용)
+        try
         {
-            locationTextBox.Text = defaultPath;
+            string defaultPath = AppDomain.CurrentDomain.BaseDirectory;
+            var locationTextBox = this.FindControl<TextBox>("LocationTextBox");
+            if (locationTextBox != null)
+            {
+                locationTextBox.Text = defaultPath;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Exception in constructor: {ex}");
         }
     }
 
@@ -47,6 +54,12 @@ public partial class NewProjectWindow : Window
     {
         var nameTextBox = this.FindControl<TextBox>("ProjectNameTextBox");
         var locationTextBox = this.FindControl<TextBox>("LocationTextBox");
+        var errorTextBlock = this.FindControl<TextBlock>("ErrorTextBlock");
+
+        if (errorTextBlock != null)
+        {
+            errorTextBlock.Text = string.Empty;
+        }
 
         string name = nameTextBox?.Text?.Trim() ?? string.Empty;
         string location = locationTextBox?.Text?.Trim() ?? string.Empty;
@@ -55,17 +68,29 @@ public partial class NewProjectWindow : Window
         char[] invalidChars = Path.GetInvalidFileNameChars();
         if (string.IsNullOrEmpty(name) || name.IndexOfAny(invalidChars) >= 0)
         {
+            if (errorTextBlock != null)
+            {
+                errorTextBlock.Text = "⚠️ 올바르지 않은 프로젝트 이름입니다. (특수문자 제외)";
+            }
             return;
         }
 
         if (string.IsNullOrEmpty(location) || !Directory.Exists(location))
         {
+            if (errorTextBlock != null)
+            {
+                errorTextBlock.Text = "⚠️ 유효하지 않은 저장 경로입니다.";
+            }
             return;
         }
 
         string fullPath = Path.Combine(location, name);
         if (Directory.Exists(fullPath))
         {
+            if (errorTextBlock != null)
+            {
+                errorTextBlock.Text = "⚠️ 지정된 경로에 동일한 이름의 폴더가 이미 존재합니다.";
+            }
             return;
         }
 

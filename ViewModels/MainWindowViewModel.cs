@@ -265,6 +265,7 @@ public class MainWindowViewModel : ViewModelBase
         catch (Exception ex)
         {
             StatusText = $"프로젝트 생성 실패: {ex.Message}";
+            System.Diagnostics.Debug.WriteLine($"Exception in CreateNewProject: {ex}");
         }
     }
 
@@ -407,10 +408,94 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     // --- [5. 플로우 커맨드 로직] ---
+    // (1) 지정된 노드 뒤에 삽입
     public void AddTextCommand(FlowCommand? target) => InsertOrAdd(target, new TextCommand { Speaker = "지우", TextContent = "새 대사..." });
     public void AddBgCommand(FlowCommand? target) => InsertOrAdd(target, new BgCommand { AssetId = "default_bg" });
     public void AddCharCommand(FlowCommand? target) => InsertOrAdd(target, new ShowCharCommand { CharacterId = "지우", Pose = "기본", Position = "Center" });
     public void AddBgmCommand(FlowCommand? target) => InsertOrAdd(target, new PlayBgmCommand { AssetId = "bgm_sunny_day", Volume = 1.0f });
+
+    // (2) 맨 처음에 삽입 (Gap 0)
+    public void AddTextCommandStart() => InsertAtStart(new TextCommand { Speaker = "지우", TextContent = "새 대사..." });
+    public void AddBgCommandStart() => InsertAtStart(new BgCommand { AssetId = "default_bg" });
+    public void AddCharCommandStart() => InsertAtStart(new ShowCharCommand { CharacterId = "지우", Pose = "기본", Position = "Center" });
+    public void AddBgmCommandStart() => InsertAtStart(new PlayBgmCommand { AssetId = "bgm_sunny_day", Volume = 1.0f });
+
+    // (3) 맨 마지막에 추가
+    public void AddTextCommandEnd() => AppendToEnd(new TextCommand { Speaker = "지우", TextContent = "새 대사..." });
+    public void AddBgCommandEnd() => AppendToEnd(new BgCommand { AssetId = "default_bg" });
+    public void AddCharCommandEnd() => AppendToEnd(new ShowCharCommand { CharacterId = "지우", Pose = "기본", Position = "Center" });
+    public void AddBgmCommandEnd() => AppendToEnd(new PlayBgmCommand { AssetId = "bgm_sunny_day", Volume = 1.0f });
+
+    // (4) 노드 순서 위/아래 이동
+    public void MoveCommandUp(FlowCommand target)
+    {
+        if (target == null) return;
+        int index = ActiveUserFlow.IndexOf(target);
+        if (index > 0)
+        {
+            ActiveUserFlow.Move(index, index - 1);
+            SelectedCommand = target;
+            UpdatePreviewState();
+        }
+    }
+
+    public void MoveCommandDown(FlowCommand target)
+    {
+        if (target == null) return;
+        int index = ActiveUserFlow.IndexOf(target);
+        if (index >= 0 && index < ActiveUserFlow.Count - 1)
+        {
+            ActiveUserFlow.Move(index, index + 1);
+            SelectedCommand = target;
+            UpdatePreviewState();
+        }
+    }
+
+    // (5) 노드 유형 즉석 변경
+    public void ChangeToText(FlowCommand target) => ConvertCommand(target, "text");
+    public void ChangeToBg(FlowCommand target) => ConvertCommand(target, "bg");
+    public void ChangeToChar(FlowCommand target) => ConvertCommand(target, "char");
+    public void ChangeToBgm(FlowCommand target) => ConvertCommand(target, "bgm");
+
+    private void ConvertCommand(FlowCommand oldCommand, string targetType)
+    {
+        if (oldCommand == null) return;
+        int index = ActiveUserFlow.IndexOf(oldCommand);
+        if (index < 0) return;
+
+        FlowCommand newCommand;
+        switch (targetType)
+        {
+            case "text":
+                var txt = new TextCommand { Speaker = "지우", TextContent = "새 대사..." };
+                if (oldCommand is ShowCharCommand sc) txt.Speaker = sc.CharacterId;
+                newCommand = txt;
+                break;
+            case "bg":
+                var bg = new BgCommand { AssetId = "default_bg" };
+                if (oldCommand is PlayBgmCommand p) bg.AssetId = p.AssetId;
+                newCommand = bg;
+                break;
+            case "char":
+                var ch = new ShowCharCommand { CharacterId = "지우", Pose = "기본", Position = "Center" };
+                if (oldCommand is TextCommand t) ch.CharacterId = t.Speaker;
+                newCommand = ch;
+                break;
+            case "bgm":
+                var bgm = new PlayBgmCommand { AssetId = "bgm_sunny_day", Volume = 1.0f };
+                if (oldCommand is BgCommand b) bgm.AssetId = b.AssetId;
+                newCommand = bgm;
+                break;
+            default:
+                return;
+        }
+
+        ActiveUserFlow[index] = newCommand;
+        SelectedCommand = newCommand;
+        UpdatePreviewState();
+    }
+
+    // (6) 삭제
     public void RemoveCommand(FlowCommand target)
     {
         int index = ActiveUserFlow.IndexOf(target);
@@ -436,7 +521,19 @@ public class MainWindowViewModel : ViewModelBase
     {
         if (target == null) ActiveUserFlow.Insert(0, newNode);
         else ActiveUserFlow.Insert(ActiveUserFlow.IndexOf(target) + 1, newNode);
-        SelectedCommand = newNode; // 자동 선택하여 프리뷰 동기화
+        SelectedCommand = newNode;
+    }
+
+    private void InsertAtStart(FlowCommand newNode)
+    {
+        ActiveUserFlow.Insert(0, newNode);
+        SelectedCommand = newNode;
+    }
+
+    private void AppendToEnd(FlowCommand newNode)
+    {
+        ActiveUserFlow.Add(newNode);
+        SelectedCommand = newNode;
     }
 
     // --- [6. 프리뷰 및 조작 시스템] ---

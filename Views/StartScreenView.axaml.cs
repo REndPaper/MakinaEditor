@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -32,16 +34,23 @@ public partial class StartScreenView : UserControl
 
     public async void CreateProject_Click(object? sender, RoutedEventArgs e)
     {
-        var topLevel = TopLevel.GetTopLevel(this);
-        var parentWindow = topLevel as Window;
-        if (parentWindow == null) return;
-
-        var dialog = new NewProjectWindow();
-        var result = await dialog.ShowDialog<bool>(parentWindow);
-
-        if (result && DataContext is MainWindowViewModel vm)
+        try
         {
-            await vm.CreateNewProject(dialog.ResultProjectPath, dialog.ResultProjectName);
+            var topLevel = TopLevel.GetTopLevel(this);
+            var parentWindow = topLevel as Window;
+            if (parentWindow == null) return;
+
+            var dialog = new NewProjectWindow();
+            var result = await dialog.ShowDialog<bool>(parentWindow);
+
+            if (result && DataContext is MainWindowViewModel vm)
+            {
+                await vm.CreateNewProject(dialog.ResultProjectPath, dialog.ResultProjectName);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Exception in CreateProject_Click: {ex}");
         }
     }
 }
