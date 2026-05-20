@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MakinaEditor.Views.NewProjectWindow"
+        Title="새 프로젝트 생성 (New Project)" Width="500" Height="250"
+        WindowStartupLocation="CenterOwner"
+        Background="#1E1E1F"
+        CanResize="False"
+        ExtendClientAreaToDecorationsHint="False">
+
+    <Grid RowDefinitions="Auto, *, Auto" Margin="20">
+        <!-- 헤더 제목 -->
+        <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
+            <TextBlock Text="🎬 새 프로젝트 생성" FontSize="18" FontWeight="Bold" Foreground="#4DB6AC"/>
+            <TextBlock Text="생성할 프로젝트의 이름과 저장될 디렉터리를 지정해 주세요." FontSize="11" Foreground="#858585"/>
+        </StackPanel>
+
+        <!-- 입력 양식 -->
+        <Grid Grid.Row="1" ColumnDefinitions="100, *" RowDefinitions="Auto, 15, Auto" VerticalAlignment="Center">
+            <!-- 프로젝트 이름 -->
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="프로젝트 이름" Foreground="#DCDCDC" VerticalAlignment="Center" FontSize="12"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Name="ProjectNameTextBox" Text="NewMakinaProject" PlaceholderText="프로젝트 폴더명이 됩니다" Height="30" FontSize="12" VerticalContentAlignment="Center"/>
+
+            <!-- 저장 경로 -->
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="저장 경로" Foreground="#DCDCDC" VerticalAlignment="Center" FontSize="12"/>
+            <Grid Grid.Row="2" Grid.Column="1" ColumnDefinitions="*, 40">
+                <TextBox Grid.Column="0" Name="LocationTextBox" PlaceholderText="폴더를 선택하세요" Height="30" FontSize="12" VerticalContentAlignment="Center" IsReadOnly="True"/>
+                <Button Grid.Column="1" Content="..." Width="30" Height="30" Margin="10,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#2D2D2D" Click="Browse_Click"/>
+            </Grid>
+        </Grid>
+
+        <!-- 버튼 영역 -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,15,0,0">
+            <Button Content="취소" Width="80" Height="32" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#2D2D2D" Foreground="#DCDCDC" Click="Cancel_Click"/>
+            <Button Content="생성" Width="80" Height="32" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#4DB6AC" Foreground="Black" FontWeight="Bold" Click="Create_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

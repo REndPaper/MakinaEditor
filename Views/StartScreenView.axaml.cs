@@ -31,21 +31,17 @@ public partial class StartScreenView : UserControl
     }
 
     public async void CreateProject_Click(object? sender, RoutedEventArgs e)
-{
-    var topLevel = TopLevel.GetTopLevel(this);
-    if (topLevel == null) return;
-
-    // 프로젝트를 생성할 '부모 폴더' 선택
-    var folders = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
     {
-        Title = "새 프로젝트를 생성할 위치 선택",
-        AllowMultiple = false
-    });
+        var topLevel = TopLevel.GetTopLevel(this);
+        var parentWindow = topLevel as Window;
+        if (parentWindow == null) return;
 
-    if (folders.Count > 0 && DataContext is MainWindowViewModel vm)
-    {
-        // 💡 실제 생성 로직은 뷰모델에 맡깁니다.
-        await vm.CreateNewProject(folders[0].Path.LocalPath);
+        var dialog = new NewProjectWindow();
+        var result = await dialog.ShowDialog<bool>(parentWindow);
+
+        if (result && DataContext is MainWindowViewModel vm)
+        {
+            await vm.CreateNewProject(dialog.ResultProjectPath, dialog.ResultProjectName);
+        }
     }
-}
 }

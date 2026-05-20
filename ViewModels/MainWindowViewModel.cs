@@ -234,17 +234,9 @@ public class MainWindowViewModel : ViewModelBase
         SaveSettings();
     }
 
-    public async Task CreateNewProject(string parentPath)
+    public async Task CreateNewProject(string parentPath, string projectName)
     {
-        string projectName = "NewMakinaProject";
         string projectPath = Path.Combine(parentPath, projectName);
-
-        int count = 1;
-        while (Directory.Exists(projectPath))
-        {
-            projectName = $"NewMakinaProject_{count++}";
-            projectPath = Path.Combine(parentPath, projectName);
-        }
 
         try
         {
