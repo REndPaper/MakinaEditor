@@ -1,4 +1,3 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
 using ReactiveUI;
 
 namespace MakinaEditor.ViewModels;

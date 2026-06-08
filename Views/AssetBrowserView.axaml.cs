@@ -1,8 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using MakinaEditor.Models;
 using MakinaEditor.ViewModels;
+using System.Linq;
 
 namespace MakinaEditor.Views;
 
@@ -13,7 +16,6 @@ public partial class AssetBrowserView : UserControl
         InitializeComponent();
     }
 
-    // 🎯 이 메서드가 없어서 에러가 났던 겁니다!
     public async void OpenFolder_Click(object? sender, RoutedEventArgs e)
     {
         // 1. 현재 UserControl이 속한 최상위 레벨(Window)을 찾습니다.
@@ -32,6 +34,53 @@ public partial class AssetBrowserView : UserControl
         {
             // 폴더 경로는 LocalPath로 가져옵니다.
             await vm.OpenProjectFolder(folders[0].Path.LocalPath);
+        }
+    }
+
+    public async void AddResource_Click(object? sender, RoutedEventArgs e)
+    {
+        var parentWindow = TopLevel.GetTopLevel(this) as Window;
+        if (parentWindow == null || !(DataContext is MainWindowViewModel vm)) return;
+
+        var dialog = new ResourceEditWindow(vm.CurrentProjectPath ?? "");
+        var result = await dialog.ShowDialog<ResourceObject>(parentWindow);
+
+        if (result != null)
+        {
+            vm.AddOrUpdateResource(result);
+        }
+    }
+
+    public void DeleteResource_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel vm)
+        {
+            vm.DeleteResourceCommand();
+        }
+    }
+
+    public async void ResourceList_DoubleTapped(object? sender, TappedEventArgs e)
+    {
+        var parentWindow = TopLevel.GetTopLevel(this) as Window;
+        if (parentWindow == null || !(DataContext is MainWindowViewModel vm)) return;
+
+        if (ResourceListBox.SelectedItem is ResourceObject selectedRes)
+        {
+            var clone = new ResourceObject
+            {
+                Id = selectedRes.Id,
+                Type = selectedRes.Type,
+                FilePath = selectedRes.FilePath,
+                Variations = new System.Collections.Generic.Dictionary<string, string>(selectedRes.Variations)
+            };
+
+            var dialog = new ResourceEditWindow(vm.CurrentProjectPath ?? "", clone);
+            var result = await dialog.ShowDialog<ResourceObject>(parentWindow);
+
+            if (result != null)
+            {
+                vm.AddOrUpdateResource(result);
+            }
         }
     }
 }

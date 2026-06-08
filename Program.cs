@@ -1,5 +1,6 @@
-﻿using Avalonia;
+using Avalonia;
 using System;
+using ReactiveUI.Avalonia;
 
 namespace MakinaEditor;
 
@@ -16,6 +17,7 @@ sealed class Program
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
+            .UseReactiveUI(_ => { })
 #if DEBUG
             .WithDeveloperTools()
 #endif

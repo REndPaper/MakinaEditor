@@ -6,7 +6,6 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using MakinaEditor.ViewModels;
 using MakinaEditor.Views;
-using Avalonia.ReactiveUI;
 
 namespace MakinaEditor;
 

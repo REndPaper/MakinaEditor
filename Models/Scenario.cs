@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 
 namespace MakinaEditor.Models;
 
@@ -15,6 +16,7 @@ public class MakinaScenario
     // 🎬 [유저 메모리 영역] 더블클릭 시 타임라인 UI와 바인딩 됨
     // Key: 연출 플로우 ID (예: "flow_01_dialogue")
     // Value: 화면 연출 OP코드 배열
+    [JsonIgnore]
     public Dictionary<string, ObservableCollection<FlowCommand>> UserFlows { get; }
 
     public MakinaScenario()

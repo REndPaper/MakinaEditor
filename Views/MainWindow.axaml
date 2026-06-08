@@ -15,6 +15,18 @@
                 <Grid ColumnDefinitions="Auto, *, Auto">
                     
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0" Spacing="10">
+                        <!-- 프로젝트 드롭다운 메뉴 추가 -->
+                        <Button Content="📂 프로젝트" Height="28" FontSize="11" VerticalContentAlignment="Center" Background="#2D2D2D" BorderBrush="#3D3D3D" BorderThickness="1">
+                            <Button.Flyout>
+                                <MenuFlyout Placement="Bottom">
+                                    <MenuItem Header="🆕 새 프로젝트 생성" Click="MenuCreateProject_Click"/>
+                                    <MenuItem Header="📂 프로젝트 열기" Click="MenuOpenProject_Click"/>
+                                    <Separator/>
+                                    <MenuItem Header="❌ 프로젝트 닫기" Command="{Binding CloseProject}"/>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+
                         <TextBlock Text="⚙️" VerticalAlignment="Center" Foreground="#4DB6AC"/>
                         <TextBlock Text="{Binding ProjectName}" FontWeight="Bold" VerticalAlignment="Center" Foreground="#DCDCDC"/>
                         
@@ -22,6 +34,10 @@
                         
                         <TextBlock Text="🎬 시나리오:" VerticalAlignment="Center" Foreground="#858585" FontSize="11"/>
                         <ComboBox ItemsSource="{Binding Scenarios}" SelectedItem="{Binding SelectedScenarioName}" Height="28" Background="#1E1E1E" BorderThickness="1" BorderBrush="#3D3D3D"/>
+                        
+                        <TextBox Text="{Binding NewScenarioNameInput}" PlaceholderText="새 시나리오명" Width="100" Height="28" FontSize="11" VerticalContentAlignment="Center" Background="#1E1E1E" BorderThickness="1" BorderBrush="#3D3D3D"/>
+                        <Button Content="➕" Command="{Binding CreateScenarioCommand}" Width="28" Height="28" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip.Tip="새 시나리오 생성" Foreground="#4DB6AC" Background="#2D2D2D"/>
+                        <Button Content="✕" Command="{Binding DeleteScenarioCommand}" Width="28" Height="28" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip.Tip="현재 시나리오 삭제" Foreground="#FF5555" Background="#2D2D2D"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="2">
@@ -32,7 +48,7 @@
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="15,0" Spacing="10">
                         <Button Content="💾 저장" Command="{Binding SaveProject}" ToolTip.Tip="프로젝트 및 시나리오 저장" Foreground="#4DB6AC" Background="Transparent"/>
-                        <Button Content="▶️ 실행" ToolTip.Tip="컴파일 및 실행" Foreground="#4CAF50" Background="Transparent"/>
+                        <Button Content="▶️ 실행" Command="{Binding RunProject}" ToolTip.Tip="컴파일 및 실행" Foreground="#4CAF50" Background="Transparent"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -85,8 +101,8 @@
                             <Panel>
                                 <!-- 배경 드로잉 레이어 -->
                                 <Panel>
-                                    <Border Background="#1E272C" IsVisible="{Binding PreviewBg, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
-                                    <Border Background="#2C3E50" IsVisible="{Binding PreviewBg, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                    <Border Background="#1E272C"/>
+                                    <Image Source="{Binding PreviewBgImage}" Stretch="UniformToFill" IsVisible="{Binding PreviewBgImage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
                                     
                                     <Border HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" Padding="8,4" Background="#80000000" CornerRadius="3">
                                         <TextBlock Text="{Binding PreviewBg, StringFormat='🌆 배경: {0}', FallbackValue='🌆 배경: 없음'}" Foreground="White" FontSize="11"/>
@@ -99,7 +115,12 @@
                                     <Border Grid.Column="0" IsVisible="{Binding PreviewLeftChar, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" 
                                             Background="#25FFFFFF" BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="6" Margin="15,0" Width="110" Height="220" VerticalAlignment="Bottom">
                                         <Grid RowDefinitions="*, Auto">
-                                            <TextBlock Grid.Row="0" Text="👤" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#40FFFFFF"/>
+                                            <Panel Grid.Row="0">
+                                                <TextBlock Text="👤" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#40FFFFFF"
+                                                           IsVisible="{Binding PreviewLeftCharImage, Converter={x:Static ObjectConverters.IsNull}}"/>
+                                                <Image Source="{Binding PreviewLeftCharImage}" Stretch="Uniform" VerticalAlignment="Bottom"
+                                                       IsVisible="{Binding PreviewLeftCharImage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                                            </Panel>
                                             <Border Grid.Row="1" Background="#A02C3E50" Padding="4" CornerRadius="0,0,5,5">
                                                 <TextBlock Text="{Binding PreviewLeftChar}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" FontSize="10" TextTrimming="CharacterEllipsis"/>
                                             </Border>
@@ -110,7 +131,12 @@
                                     <Border Grid.Column="1" IsVisible="{Binding PreviewCenterChar, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" 
                                             Background="#25FFFFFF" BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="6" Margin="15,0" Width="110" Height="220" VerticalAlignment="Bottom">
                                         <Grid RowDefinitions="*, Auto">
-                                            <TextBlock Grid.Row="0" Text="👤" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#40FFFFFF"/>
+                                            <Panel Grid.Row="0">
+                                                <TextBlock Text="👤" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#40FFFFFF"
+                                                           IsVisible="{Binding PreviewCenterCharImage, Converter={x:Static ObjectConverters.IsNull}}"/>
+                                                <Image Source="{Binding PreviewCenterCharImage}" Stretch="Uniform" VerticalAlignment="Bottom"
+                                                       IsVisible="{Binding PreviewCenterCharImage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                                            </Panel>
                                             <Border Grid.Row="1" Background="#A02C3E50" Padding="4" CornerRadius="0,0,5,5">
                                                 <TextBlock Text="{Binding PreviewCenterChar}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" FontSize="10" TextTrimming="CharacterEllipsis"/>
                                             </Border>
@@ -121,7 +147,12 @@
                                     <Border Grid.Column="2" IsVisible="{Binding PreviewRightChar, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" 
                                             Background="#25FFFFFF" BorderBrush="#40FFFFFF" BorderThickness="1" CornerRadius="6" Margin="15,0" Width="110" Height="220" VerticalAlignment="Bottom">
                                         <Grid RowDefinitions="*, Auto">
-                                            <TextBlock Grid.Row="0" Text="👤" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#40FFFFFF"/>
+                                            <Panel Grid.Row="0">
+                                                <TextBlock Text="👤" FontSize="56" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#40FFFFFF"
+                                                           IsVisible="{Binding PreviewRightCharImage, Converter={x:Static ObjectConverters.IsNull}}"/>
+                                                <Image Source="{Binding PreviewRightCharImage}" Stretch="Uniform" VerticalAlignment="Bottom"
+                                                       IsVisible="{Binding PreviewRightCharImage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                                            </Panel>
                                             <Border Grid.Row="1" Background="#A02C3E50" Padding="4" CornerRadius="0,0,5,5">
                                                 <TextBlock Text="{Binding PreviewRightChar}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" FontSize="10" TextTrimming="CharacterEllipsis"/>
                                             </Border>

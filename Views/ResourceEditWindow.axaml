@@ -1,0 +1,92 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MakinaEditor.ViewModels"
+        xmlns:models="using:MakinaEditor.Models"
+        x:Class="MakinaEditor.Views.ResourceEditWindow"
+        Title="리소스 객체 편집"
+        Width="450" Height="480"
+        WindowStartupLocation="CenterOwner"
+        Background="#1E1E1F"
+        CanResize="False">
+
+    <Border BorderBrush="#3D3D3D" BorderThickness="1" Background="#1E1E1F" CornerRadius="8">
+        <Grid RowDefinitions="Auto, *, Auto" Margin="15">
+            <!-- 윈도우 타이틀바 영역 -->
+            <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="📦" VerticalAlignment="Center" FontSize="16"/>
+                    <TextBlock Name="TitleTextBlock" Text="리소스 객체 추가/수정" FontSize="14" FontWeight="Bold" Foreground="#E0E0E0" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="✕" Click="Close_Click" Background="Transparent" BorderThickness="0" Foreground="#858585" VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- 컨텐츠 스크롤 영역 -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="12">
+                    <!-- 리소스 ID -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="리소스 ID" FontSize="11" Foreground="#858585" FontWeight="Bold"/>
+                        <TextBox Name="ResourceIdTextBox" PlaceholderText="예: jiwoo, bg_classroom" Height="30" FontSize="12" Background="#171718" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4"/>
+                    </StackPanel>
+
+                    <!-- 리소스 타입 -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="리소스 타입" FontSize="11" Foreground="#858585" FontWeight="Bold"/>
+                        <ComboBox Name="ResourceTypeComboBox" HorizontalAlignment="Stretch" Height="30" FontSize="12" Background="#171718" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4">
+                            <!-- Code-behind에서 ItemsSource 설정 -->
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- 배경 전용: 파일 경로 -->
+                    <StackPanel Name="BackgroundPathPanel" Spacing="4">
+                        <TextBlock Text="배경 이미지 경로" FontSize="11" Foreground="#858585" FontWeight="Bold"/>
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="5">
+                            <TextBox Grid.Column="0" Name="FilePathTextBox" PlaceholderText="Assets/bg_classroom.png" Height="30" FontSize="12" Background="#171718" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4" IsEnabled="False"/>
+                            <Button Grid.Column="1" Content="📂 파일 선택" Click="SelectFile_Click" Height="30" Padding="10,0" FontSize="11" Background="#2A2A2B" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- 캐릭터 전용: 포즈 관리 패널 -->
+                    <StackPanel Name="CharacterPosePanel" Spacing="8">
+                        <Separator Height="1" Background="#3D3D3D" Margin="0,5"/>
+                        <TextBlock Text="👤 캐릭터 포즈 관리" FontSize="11" Foreground="#858585" FontWeight="Bold"/>
+                        
+                        <!-- 등록된 포즈 목록 -->
+                        <ListBox Name="PosesListBox" Height="100" Background="#171718" BorderThickness="1" BorderBrush="#3D3D3D" CornerRadius="4">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:PoseEntry">
+                                    <Grid ColumnDefinitions="*, *">
+                                        <TextBlock Grid.Column="0" Text="{Binding Key}" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Value}" FontSize="9" Foreground="Gray" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <!-- 포즈 추가 폼 -->
+                        <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, Auto" Margin="0,5,0,0" RowSpacing="5" ColumnSpacing="5">
+                            <!-- 포즈명 입력 -->
+                            <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="PoseNameTextBox" PlaceholderText="포즈명 (예: default, smile)" Height="28" FontSize="11" Background="#171718" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4"/>
+                            
+                            <!-- 포즈 이미지 경로 -->
+                            <TextBox Grid.Row="1" Grid.Column="0" Name="PosePathTextBox" PlaceholderText="포즈 이미지 경로 (Assets/char_...)" Height="28" FontSize="11" Background="#171718" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4" IsEnabled="False"/>
+                            <Button Grid.Row="1" Grid.Column="1" Content="📂 선택" Click="SelectPoseFile_Click" Height="28" Padding="10,0" FontSize="10" Background="#2A2A2B" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4"/>
+                        </Grid>
+
+                        <!-- 포즈 조작 버튼 -->
+                        <Grid ColumnDefinitions="*, *">
+                            <Button Grid.Column="0" Content="➕ 포즈 추가" Click="AddPose_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="28" FontSize="11" Margin="0,0,2,0" Background="#2A2A2B" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4"/>
+                            <Button Grid.Column="1" Content="✕ 포즈 삭제" Click="DeletePose_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="28" FontSize="11" Margin="2,0,0,0" Foreground="#FF5555" Background="#2A2A2B" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4"/>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- 하단 윈도우 액션 버튼 -->
+            <Grid Grid.Row="2" ColumnDefinitions="*, *" Margin="0,15,0,0">
+                <Button Grid.Column="0" Content="💾 저장" Click="Save_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="32" FontSize="12" Margin="0,0,5,0" Background="#9B59B6" Foreground="White" CornerRadius="4"/>
+                <Button Grid.Column="1" Content="✕ 취소" Click="Cancel_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="32" FontSize="12" Margin="5,0,0,0" Background="#2A2A2B" BorderBrush="#3D3D3D" BorderThickness="1" CornerRadius="4"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
