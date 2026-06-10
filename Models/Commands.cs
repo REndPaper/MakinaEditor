@@ -101,7 +101,7 @@ public class ShowCharCommand : FlowCommand
         var vm = MainWindowViewModel.Instance;
         if (vm != null)
         {
-            var character = vm.ProjectResources.FirstOrDefault(x => x.Type == ResourceType.Character && x.Id.Equals(CharacterId, StringComparison.OrdinalIgnoreCase));
+            var character = vm.Assets.ProjectResources.FirstOrDefault(x => x.Type == ResourceType.Character && x.Id.Equals(CharacterId, StringComparison.OrdinalIgnoreCase));
             if (character != null)
             {
                 foreach (var poseKey in character.Variations.Keys)

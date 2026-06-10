@@ -8,7 +8,7 @@
         Background="#1E1E1E">
 
     <Panel>
-        <views:StartScreenView IsVisible="{Binding !IsProjectLoaded}"/>
+        <views:StartScreenView IsVisible="{Binding !$parent[Window].((vm:MainWindowViewModel)DataContext).IsProjectLoaded}" DataContext="{Binding Project}"/>
         <DockPanel IsVisible="{Binding IsProjectLoaded}">
             <!-- 상단 헤더 영역 -->
             <Border DockPanel.Dock="Top" Height="45" Background="#2D2D2D" BorderBrush="#1E1E1E" BorderThickness="0,0,0,1">
@@ -22,22 +22,22 @@
                                     <MenuItem Header="🆕 새 프로젝트 생성" Click="MenuCreateProject_Click"/>
                                     <MenuItem Header="📂 프로젝트 열기" Click="MenuOpenProject_Click"/>
                                     <Separator/>
-                                    <MenuItem Header="❌ 프로젝트 닫기" Command="{Binding CloseProject}"/>
+                                    <MenuItem Header="❌ 프로젝트 닫기" Command="{Binding Project.CloseProject}"/>
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>
 
                         <TextBlock Text="⚙️" VerticalAlignment="Center" Foreground="#4DB6AC"/>
-                        <TextBlock Text="{Binding ProjectName}" FontWeight="Bold" VerticalAlignment="Center" Foreground="#DCDCDC"/>
+                        <TextBlock Text="{Binding Project.ProjectName}" FontWeight="Bold" VerticalAlignment="Center" Foreground="#DCDCDC"/>
                         
                         <Border Width="1" Height="16" Background="#40FFFFFF" Margin="5,0"/>
                         
                         <TextBlock Text="🎬 시나리오:" VerticalAlignment="Center" Foreground="#858585" FontSize="11"/>
-                        <ComboBox ItemsSource="{Binding Scenarios}" SelectedItem="{Binding SelectedScenarioName}" Height="28" Background="#1E1E1E" BorderThickness="1" BorderBrush="#3D3D3D"/>
+                        <ComboBox ItemsSource="{Binding Scenario.Scenarios}" SelectedItem="{Binding Scenario.SelectedScenarioName}" Height="28" Background="#1E1E1E" BorderThickness="1" BorderBrush="#3D3D3D"/>
                         
-                        <TextBox Text="{Binding NewScenarioNameInput}" PlaceholderText="새 시나리오명" Width="100" Height="28" FontSize="11" VerticalContentAlignment="Center" Background="#1E1E1E" BorderThickness="1" BorderBrush="#3D3D3D"/>
-                        <Button Content="➕" Command="{Binding CreateScenarioCommand}" Width="28" Height="28" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip.Tip="새 시나리오 생성" Foreground="#4DB6AC" Background="#2D2D2D"/>
-                        <Button Content="✕" Command="{Binding DeleteScenarioCommand}" Width="28" Height="28" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip.Tip="현재 시나리오 삭제" Foreground="#FF5555" Background="#2D2D2D"/>
+                        <TextBox Text="{Binding Scenario.NewScenarioNameInput}" PlaceholderText="새 시나리오명" Width="100" Height="28" FontSize="11" VerticalContentAlignment="Center" Background="#1E1E1E" BorderThickness="1" BorderBrush="#3D3D3D"/>
+                        <Button Content="➕" Command="{Binding Scenario.CreateScenarioCommand}" Width="28" Height="28" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip.Tip="새 시나리오 생성" Foreground="#4DB6AC" Background="#2D2D2D"/>
+                        <Button Content="✕" Command="{Binding Scenario.DeleteScenarioCommand}" Width="28" Height="28" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" ToolTip.Tip="현재 시나리오 삭제" Foreground="#FF5555" Background="#2D2D2D"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="2">
@@ -47,8 +47,8 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="15,0" Spacing="10">
-                        <Button Content="💾 저장" Command="{Binding SaveProject}" ToolTip.Tip="프로젝트 및 시나리오 저장" Foreground="#4DB6AC" Background="Transparent"/>
-                        <Button Content="▶️ 실행" Command="{Binding RunProject}" ToolTip.Tip="컴파일 및 실행" Foreground="#4CAF50" Background="Transparent"/>
+                        <Button Content="💾 저장" Command="{Binding Project.SaveProject}" ToolTip.Tip="프로젝트 및 시나리오 저장" Foreground="#4DB6AC" Background="Transparent"/>
+                        <Button Content="▶️ 실행" Command="{Binding Project.RunProject}" ToolTip.Tip="컴파일 및 실행" Foreground="#4CAF50" Background="Transparent"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -65,10 +65,10 @@
             <Grid>
                 <Grid ColumnDefinitions="2*, 5*, 3*" IsVisible="{Binding IsFlowMode}">
                     <!-- 에셋 브라우저 -->
-                    <views:AssetBrowserView Grid.Column="0"/>
+                    <views:AssetBrowserView Grid.Column="0" DataContext="{Binding Assets}"/>
                     
                     <!-- 인터랙티브 프리뷰 시뮬레이터 -->
-                    <DockPanel Grid.Column="1" Margin="10">
+                    <DockPanel Grid.Column="1" Margin="10" DataContext="{Binding Preview}">
                         <!-- 프리뷰 조작 컨트롤러 -->
                         <Border DockPanel.Dock="Top" Height="40" Background="#252526" CornerRadius="4,4,0,0" BorderBrush="#3D3D3D" BorderThickness="1,1,1,0">
                             <Grid ColumnDefinitions="Auto, *, Auto">
@@ -179,7 +179,7 @@
                     </DockPanel>
 
                     <!-- 타임라인 편집기 -->
-                    <views:FlowEditorView Grid.Column="2"/>
+                    <views:FlowEditorView Grid.Column="2" DataContext="{Binding Flow}"/>
                 </Grid>
 
                 <!-- 기타 편집 모드 뷰홀더 -->

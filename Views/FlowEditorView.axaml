@@ -3,7 +3,7 @@
              xmlns:vm="using:MakinaEditor.ViewModels"
              xmlns:models="using:MakinaEditor.Models"
              x:Class="MakinaEditor.Views.FlowEditorView"
-             x:DataType="vm:MainWindowViewModel">
+             x:DataType="vm:FlowEditorViewModel">
 
     <DockPanel Margin="10">
         <!-- 플로우(Flow) 선택 및 관리 영역 -->
@@ -51,8 +51,8 @@
 
             <!-- 타임라인 리스트박스 -->
             <ListBox ItemsSource="{Binding ActiveUserFlow}" 
-                     SelectedItem="{Binding SelectedCommand, Mode=TwoWay}"
-                     Background="Transparent" BorderThickness="0">
+                      SelectedItem="{Binding SelectedCommand, Mode=TwoWay}"
+                      Background="Transparent" BorderThickness="0">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="Padding" Value="0"/>
@@ -85,11 +85,11 @@
                                                 </StackPanel>
                                                 <Button.Flyout>
                                                     <MenuFlyout Placement="Bottom">
-                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
@@ -101,13 +101,13 @@
                                         <!-- 조작 버튼 영역 (위, 아래, 삭제) -->
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="5,0,0,0" Spacing="2">
                                             <Button Content="▲" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="위로 이동"/>
                                             <Button Content="▼" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="아래로 이동"/>
                                             <Button Content="✕" Width="20" Height="20" Padding="0" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#FF5555" ToolTip.Tip="삭제"/>
                                         </StackPanel>
                                     </Grid>
@@ -119,11 +119,11 @@
                                     HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
                                 <Button.Flyout>
                                     <MenuFlyout>
-                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
@@ -149,28 +149,28 @@
                                                 </StackPanel>
                                                 <Button.Flyout>
                                                     <MenuFlyout Placement="Bottom">
-                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
 
-                                            <ComboBox ItemsSource="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RegisteredBgs}" SelectedItem="{Binding AssetId}" HorizontalAlignment="Stretch" Height="28" FontSize="11" Background="#171D26" BorderThickness="0"/>
+                                            <ComboBox ItemsSource="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).RegisteredBgs}" SelectedItem="{Binding AssetId}" HorizontalAlignment="Stretch" Height="28" FontSize="11" Background="#171D26" BorderThickness="0"/>
                                         </StackPanel>
 
                                         <!-- 조작 버튼 영역 (위, 아래, 삭제) -->
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="5,0,0,0" Spacing="2">
                                             <Button Content="▲" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="위로 이동"/>
                                             <Button Content="▼" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="아래로 이동"/>
                                             <Button Content="✕" Width="20" Height="20" Padding="0" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#FF5555" ToolTip.Tip="삭제"/>
                                         </StackPanel>
                                     </Grid>
@@ -181,11 +181,11 @@
                                     HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
                                 <Button.Flyout>
                                     <MenuFlyout>
-                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
@@ -211,16 +211,16 @@
                                                 </StackPanel>
                                                 <Button.Flyout>
                                                     <MenuFlyout Placement="Bottom">
-                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
                                             
-                                            <ComboBox ItemsSource="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RegisteredCharacters}" SelectedItem="{Binding CharacterId}" HorizontalAlignment="Stretch" Height="28" FontSize="11" Background="#1F1826" BorderThickness="0"/>
+                                            <ComboBox ItemsSource="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).RegisteredCharacters}" SelectedItem="{Binding CharacterId}" HorizontalAlignment="Stretch" Height="28" FontSize="11" Background="#1F1826" BorderThickness="0"/>
                                             <ComboBox ItemsSource="{Binding AvailablePoses}" SelectedItem="{Binding Pose, Mode=TwoWay}" HorizontalAlignment="Stretch" Height="28" FontSize="11" Background="#1F1826" BorderThickness="0"/>
                                             <TextBox Text="{Binding Position}" PlaceholderText="위치 (Left, Center, Right, Hide)" Background="#1F1826" BorderThickness="0" Height="26" FontSize="11" VerticalContentAlignment="Center"/>
                                         </StackPanel>
@@ -228,13 +228,13 @@
                                         <!-- 조작 버튼 영역 (위, 아래, 삭제) -->
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="5,0,0,0" Spacing="2">
                                             <Button Content="▲" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="위로 이동"/>
                                             <Button Content="▼" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="아래로 이동"/>
                                             <Button Content="✕" Width="20" Height="20" Padding="0" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#FF5555" ToolTip.Tip="삭제"/>
                                         </StackPanel>
                                     </Grid>
@@ -245,11 +245,11 @@
                                     HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
                                 <Button.Flyout>
                                     <MenuFlyout>
-                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
@@ -275,11 +275,11 @@
                                                 </StackPanel>
                                                 <Button.Flyout>
                                                     <MenuFlyout Placement="Bottom">
-                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
@@ -294,13 +294,13 @@
                                         <!-- 조작 버튼 영역 (위, 아래, 삭제) -->
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="5,0,0,0" Spacing="2">
                                             <Button Content="▲" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="위로 이동"/>
                                             <Button Content="▼" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="아래로 이동"/>
                                             <Button Content="✕" Width="20" Height="20" Padding="0" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#FF5555" ToolTip.Tip="삭제"/>
                                         </StackPanel>
                                     </Grid>
@@ -311,11 +311,11 @@
                                     HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
                                 <Button.Flyout>
                                     <MenuFlyout>
-                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
@@ -341,11 +341,11 @@
                                                 </StackPanel>
                                                 <Button.Flyout>
                                                     <MenuFlyout Placement="Bottom">
-                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
-                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
@@ -360,13 +360,13 @@
                                         <!-- 조작 버튼 영역 (위, 아래, 삭제) -->
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="5,0,0,0" Spacing="2">
                                             <Button Content="▲" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="위로 이동"/>
                                             <Button Content="▼" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#858585" ToolTip.Tip="아래로 이동"/>
                                             <Button Content="✕" Width="20" Height="20" Padding="0" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
                                                     Background="Transparent" Foreground="#FF5555" ToolTip.Tip="삭제"/>
                                         </StackPanel>
                                     </Grid>
@@ -377,11 +377,11 @@
                                     HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
                                 <Button.Flyout>
                                     <MenuFlyout>
-                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
-                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>

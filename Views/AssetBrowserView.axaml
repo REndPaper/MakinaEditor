@@ -3,7 +3,7 @@
              xmlns:vm="using:MakinaEditor.ViewModels"
              xmlns:models="using:MakinaEditor.Models"
              x:Class="MakinaEditor.Views.AssetBrowserView"
-             x:DataType="vm:MainWindowViewModel">    <Border Background="#252526" BorderBrush="#3D3D3D" BorderThickness="0,0,1,0">
+             x:DataType="vm:AssetBrowserViewModel">    <Border Background="#252526" BorderBrush="#3D3D3D" BorderThickness="0,0,1,0">
         <Grid RowDefinitions="*, Auto">
             
             <!-- 상단 에셋 트리뷰 -->

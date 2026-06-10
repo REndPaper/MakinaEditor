@@ -23,7 +23,7 @@ public partial class MainWindow : Window
 
         if (folders.Count > 0 && DataContext is MainWindowViewModel vm)
         {
-            await vm.OpenProjectFolder(folders[0].Path.LocalPath);
+            await vm.Project.OpenProjectFolder(folders[0].Path.LocalPath);
         }
     }
 
@@ -36,7 +36,7 @@ public partial class MainWindow : Window
 
             if (result && DataContext is MainWindowViewModel vm)
             {
-                await vm.CreateNewProject(dialog.ResultProjectPath, dialog.ResultProjectName);
+                await vm.Project.CreateNewProject(dialog.ResultProjectPath, dialog.ResultProjectName);
             }
         }
         catch (Exception ex)

@@ -26,7 +26,7 @@ public partial class StartScreenView : UserControl
             AllowMultiple = false
         });
 
-        if (folders.Count > 0 && DataContext is MainWindowViewModel vm)
+        if (folders.Count > 0 && DataContext is ProjectViewModel vm)
         {
             await vm.OpenProjectFolder(folders[0].Path.LocalPath);
         }
@@ -43,7 +43,7 @@ public partial class StartScreenView : UserControl
             var dialog = new NewProjectWindow();
             var result = await dialog.ShowDialog<bool>(parentWindow);
 
-            if (result && DataContext is MainWindowViewModel vm)
+            if (result && DataContext is ProjectViewModel vm)
             {
                 await vm.CreateNewProject(dialog.ResultProjectPath, dialog.ResultProjectName);
             }

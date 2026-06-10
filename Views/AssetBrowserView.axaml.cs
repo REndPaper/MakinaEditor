@@ -30,19 +30,19 @@ public partial class AssetBrowserView : UserControl
         });
 
         // 3. 선택된 폴더가 있다면 뷰모델의 로직 실행
-        if (folders.Count > 0 && DataContext is MainWindowViewModel vm)
+        if (folders.Count > 0 && DataContext is AssetBrowserViewModel vm)
         {
             // 폴더 경로는 LocalPath로 가져옵니다.
-            await vm.OpenProjectFolder(folders[0].Path.LocalPath);
+            await vm.Main.Project.OpenProjectFolder(folders[0].Path.LocalPath);
         }
     }
 
     public async void AddResource_Click(object? sender, RoutedEventArgs e)
     {
         var parentWindow = TopLevel.GetTopLevel(this) as Window;
-        if (parentWindow == null || !(DataContext is MainWindowViewModel vm)) return;
+        if (parentWindow == null || !(DataContext is AssetBrowserViewModel vm)) return;
 
-        var dialog = new ResourceEditWindow(vm.CurrentProjectPath ?? "");
+        var dialog = new ResourceEditWindow(vm.Main.Project.CurrentProjectPath ?? "");
         var result = await dialog.ShowDialog<ResourceObject>(parentWindow);
 
         if (result != null)
@@ -53,7 +53,7 @@ public partial class AssetBrowserView : UserControl
 
     public void DeleteResource_Click(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is MainWindowViewModel vm)
+        if (DataContext is AssetBrowserViewModel vm)
         {
             vm.DeleteResourceCommand();
         }
@@ -62,7 +62,7 @@ public partial class AssetBrowserView : UserControl
     public async void ResourceList_DoubleTapped(object? sender, TappedEventArgs e)
     {
         var parentWindow = TopLevel.GetTopLevel(this) as Window;
-        if (parentWindow == null || !(DataContext is MainWindowViewModel vm)) return;
+        if (parentWindow == null || !(DataContext is AssetBrowserViewModel vm)) return;
 
         if (ResourceListBox.SelectedItem is ResourceObject selectedRes)
         {
@@ -74,7 +74,7 @@ public partial class AssetBrowserView : UserControl
                 Variations = new System.Collections.Generic.Dictionary<string, string>(selectedRes.Variations)
             };
 
-            var dialog = new ResourceEditWindow(vm.CurrentProjectPath ?? "", clone);
+            var dialog = new ResourceEditWindow(vm.Main.Project.CurrentProjectPath ?? "", clone);
             var result = await dialog.ShowDialog<ResourceObject>(parentWindow);
 
             if (result != null)
