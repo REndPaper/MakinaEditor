@@ -419,4 +419,31 @@ public class AssetBrowserViewModel : ViewModelBase
         UpdateRegisteredResourcesList();
         _ = _main.Project.SaveProject();
     }
+
+    // 전역 변수 관리 관련 기능 추가
+    public ObservableCollection<VariableDefinition> Variables => _main.Project.ProjectVariables;
+    public VariableType[] VariableTypes => Enum.GetValues<VariableType>();
+
+    public void AddVariableCommand()
+    {
+        string newName = $"var_{Variables.Count + 1}";
+        var newVar = new VariableDefinition 
+        { 
+            Name = newName, 
+            Type = VariableType.Boolean, 
+            DefaultValue = "false" 
+        };
+        Variables.Add(newVar);
+        _main.StatusText = $"새 전역 변수 '{newName}' 추가 완료.";
+        _ = _main.Project.SaveProject();
+    }
+
+    public void DeleteVariableCommand(VariableDefinition target)
+    {
+        if (target == null) return;
+        string name = target.Name;
+        Variables.Remove(target);
+        _main.StatusText = $"전역 변수 '{name}' 삭제 완료.";
+        _ = _main.Project.SaveProject();
+    }
 }

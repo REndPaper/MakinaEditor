@@ -42,6 +42,7 @@ public class ProjectViewModel : ViewModelBase
     }
 
     public ObservableCollection<RecentProjectItem> RecentProjects { get; } = new();
+    public ObservableCollection<VariableDefinition> ProjectVariables { get; } = new();
 
     public ProjectViewModel(MainWindowViewModel main)
     {
@@ -83,6 +84,15 @@ public class ProjectViewModel : ViewModelBase
                     }
                 }
                 _main.Assets.UpdateRegisteredResourcesList();
+
+                ProjectVariables.Clear();
+                if (meta?.Variables != null)
+                {
+                    foreach (var v in meta.Variables)
+                    {
+                        ProjectVariables.Add(v);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -263,7 +273,8 @@ public class ProjectViewModel : ViewModelBase
             { 
                 Name = ProjectName, 
                 Version = "1.0.0",
-                Resources = _main.Assets.ProjectResources.ToList()
+                Resources = _main.Assets.ProjectResources.ToList(),
+                Variables = new ObservableCollection<VariableDefinition>(ProjectVariables)
             };
             await File.WriteAllTextAsync(projectFilePath, JsonSerializer.Serialize(meta, options));
 
@@ -287,6 +298,7 @@ public class ProjectViewModel : ViewModelBase
         _main.Assets.AssetRegistry.Clear();
         _main.Assets.ProjectAssets.Clear();
         _main.Assets.ProjectResources.Clear();
+        ProjectVariables.Clear();
         _main.Assets.RegisteredBgs.Clear();
         _main.Assets.RegisteredCharacters.Clear();
         _main.Assets.NewResourceIdInput = "";

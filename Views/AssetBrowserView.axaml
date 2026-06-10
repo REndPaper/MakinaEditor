@@ -3,58 +3,101 @@
              xmlns:vm="using:MakinaEditor.ViewModels"
              xmlns:models="using:MakinaEditor.Models"
              x:Class="MakinaEditor.Views.AssetBrowserView"
-             x:DataType="vm:AssetBrowserViewModel">    <Border Background="#252526" BorderBrush="#3D3D3D" BorderThickness="0,0,1,0">
-        <Grid RowDefinitions="*, Auto">
-            
-            <!-- 상단 에셋 트리뷰 -->
-            <DockPanel Grid.Row="0">
-                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5" Spacing="5">
-                    <TextBlock Text="PROJECT ASSETS" VerticalAlignment="Center" 
-                            FontSize="11" FontWeight="Bold" Foreground="#858585"/>
-                    <Button Content="📂" Padding="5,2" Background="Transparent" 
-                            Click="OpenFolder_Click" ToolTip.Tip="프로젝트 열기"/>
-                    <Button Content="🔄" Padding="5,2" Background="Transparent" 
-                            Command="{Binding RefreshAssets}" ToolTip.Tip="에셋 새로고침"/>
-                </StackPanel>
-                
-                <TreeView ItemsSource="{Binding ProjectAssets}" SelectedItem="{Binding SelectedAssetNode, Mode=TwoWay}" Background="Transparent" BorderThickness="0">
-                    <TreeView.ItemTemplate>
-                        <TreeDataTemplate ItemsSource="{Binding Children}">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <TextBlock Text="📁" FontSize="12" IsVisible="{Binding IsFolder}" Foreground="#CCA700"/>
-                                <TextBlock Text="📄" FontSize="12" IsVisible="{Binding IsNotFolder}" Foreground="#858585"/>
-                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
-                            </StackPanel>
-                        </TreeDataTemplate>
-                    </TreeView.ItemTemplate>
-                </TreeView>
-            </DockPanel>
-            
-            <!-- 하단 리소스 객체 정의 패널 -->
-            <Border Grid.Row="1" BorderBrush="#3D3D3D" BorderThickness="0,1,0,0" Background="#1E1E1F" Padding="8">
-                <Grid RowDefinitions="Auto, *">
-                    <Grid Grid.Row="0" ColumnDefinitions="*, Auto, Auto" Margin="0,0,0,5">
-                        <TextBlock Grid.Column="0" Text="📦 등록된 리소스 객체" FontSize="11" FontWeight="Bold" Foreground="#858585" VerticalAlignment="Center"/>
-                        <Button Grid.Column="1" Content="➕" Click="AddResource_Click" Width="24" Height="24" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="Transparent" BorderThickness="0" ToolTip.Tip="리소스 객체 추가"/>
-                        <Button Grid.Column="2" Content="✕" Click="DeleteResource_Click" Width="24" Height="24" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="#FF5555" ToolTip.Tip="리소스 객체 삭제"/>
-                    </Grid>
+             x:DataType="vm:AssetBrowserViewModel">
+    <TabControl Background="#252526" BorderBrush="#3D3D3D" BorderThickness="0,0,1,0">
+        <TabControl.Styles>
+            <Style Selector="TabItem">
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="MinHeight" Value="30"/>
+                <Setter Property="Padding" Value="12,4"/>
+            </Style>
+        </TabControl.Styles>
+        
+        <!-- 탭 1: 에셋 & 리소스 -->
+        <TabItem Header="📦 에셋 &amp; 리소스">
+            <Grid RowDefinitions="*, Auto">
+                <!-- 상단 에셋 트리뷰 -->
+                <DockPanel Grid.Row="0">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5" Spacing="5">
+                        <TextBlock Text="PROJECT ASSETS" VerticalAlignment="Center" 
+                                FontSize="11" FontWeight="Bold" Foreground="#858585"/>
+                        <Button Content="📂" Padding="5,2" Background="Transparent" 
+                                Click="OpenFolder_Click" ToolTip.Tip="프로젝트 열기"/>
+                        <Button Content="🔄" Padding="5,2" Background="Transparent" 
+                                Command="{Binding RefreshAssets}" ToolTip.Tip="에셋 새로고침"/>
+                    </StackPanel>
                     
-                    <ListBox Grid.Row="1" Name="ResourceListBox" ItemsSource="{Binding ProjectResources}" SelectedItem="{Binding SelectedResource}" Height="180" Background="#171718" BorderThickness="1" BorderBrush="#3D3D3D" DoubleTapped="ResourceList_DoubleTapped">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="models:ResourceObject">
-                                <Grid ColumnDefinitions="Auto, *, Auto">
-                                    <TextBlock Grid.Column="0" Text="{Binding Icon}" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                    <StackPanel Grid.Column="1" Orientation="Vertical">
-                                        <TextBlock Text="{Binding Id}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
-                                        <TextBlock Text="{Binding DisplayName}" FontSize="10" Foreground="Gray" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="2" Text="{Binding Type}" FontSize="10" Foreground="Gray" VerticalAlignment="Center"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <TreeView ItemsSource="{Binding ProjectAssets}" SelectedItem="{Binding SelectedAssetNode, Mode=TwoWay}" Background="Transparent" BorderThickness="0">
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="📁" FontSize="12" IsVisible="{Binding IsFolder}" Foreground="#CCA700"/>
+                                    <TextBlock Text="📄" FontSize="12" IsVisible="{Binding IsNotFolder}" Foreground="#858585"/>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
+                                </StackPanel>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DockPanel>
+                
+                <!-- 하단 리소스 객체 정의 패널 -->
+                <Border Grid.Row="1" BorderBrush="#3D3D3D" BorderThickness="0,1,0,0" Background="#1E1E1F" Padding="8">
+                    <Grid RowDefinitions="Auto, *">
+                        <Grid Grid.Row="0" ColumnDefinitions="*, Auto, Auto" Margin="0,0,0,5">
+                            <TextBlock Grid.Column="0" Text="📦 등록된 리소스 객체" FontSize="11" FontWeight="Bold" Foreground="#858585" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Content="➕" Click="AddResource_Click" Width="24" Height="24" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="Transparent" BorderThickness="0" ToolTip.Tip="리소스 객체 추가"/>
+                            <Button Grid.Column="2" Content="✕" Click="DeleteResource_Click" Width="24" Height="24" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="#FF5555" ToolTip.Tip="리소스 객체 삭제"/>
+                        </Grid>
+                        
+                        <ListBox Grid.Row="1" Name="ResourceListBox" ItemsSource="{Binding ProjectResources}" SelectedItem="{Binding SelectedResource}" Height="180" Background="#171718" BorderThickness="1" BorderBrush="#3D3D3D" DoubleTapped="ResourceList_DoubleTapped">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:ResourceObject">
+                                    <Grid ColumnDefinitions="Auto, *, Auto">
+                                        <TextBlock Grid.Column="0" Text="{Binding Icon}" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                                            <TextBlock Text="{Binding Id}" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding DisplayName}" FontSize="10" Foreground="Gray" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2" Text="{Binding Type}" FontSize="10" Foreground="Gray" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Border>
+            </Grid>
+        </TabItem>
+        
+        <!-- 탭 2: 전역 변수 -->
+        <TabItem Header="🔑 전역 변수">
+            <DockPanel Margin="10">
+                <!-- 상단 툴바 -->
+                <Grid DockPanel.Dock="Top" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
+                    <TextBlock Grid.Column="0" Text="🔑 전역 변수 &amp; 플래그 목록" FontSize="11" FontWeight="Bold" Foreground="#858585" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Content="➕ 변수 추가" Command="{Binding AddVariableCommand}" Height="26" FontSize="10" Foreground="#4DB6AC" Background="#1E1E1F" BorderBrush="#3D3D3D" BorderThickness="1"/>
                 </Grid>
-            </Border>
-        </Grid>
-    </Border>
+                
+                <!-- 변수 리스트 테이블 구조 -->
+                <ListBox ItemsSource="{Binding Variables}" Background="#171718" BorderThickness="1" BorderBrush="#3D3D3D">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="models:VariableDefinition">
+                            <Grid ColumnDefinitions="*, 80, 80, Auto" Margin="0,2" Height="30">
+                                <!-- 1. 변수명 입력 -->
+                                <TextBox Grid.Column="0" Text="{Binding Name}" PlaceholderText="변수 이름" FontSize="11" VerticalContentAlignment="Center" Background="#1E1E1F" BorderThickness="0" Margin="0,0,4,0" Height="26"/>
+                                
+                                <!-- 2. 타입 선택 -->
+                                <ComboBox Grid.Column="1" ItemsSource="{Binding $parent[UserControl].((vm:AssetBrowserViewModel)DataContext).VariableTypes}" SelectedItem="{Binding Type}" FontSize="10" Background="#1E1E1F" BorderThickness="0" Margin="0,0,4,0" Height="26" HorizontalAlignment="Stretch"/>
+                                
+                                <!-- 3. 기본값 입력 -->
+                                <TextBox Grid.Column="2" Text="{Binding DefaultValue}" PlaceholderText="기본값" FontSize="11" VerticalContentAlignment="Center" Background="#1E1E1F" BorderThickness="0" Margin="0,0,4,0" Height="26"/>
+                                
+                                <!-- 4. 삭제 버튼 -->
+                                <Button Grid.Column="3" Content="✕" Command="{Binding $parent[UserControl].((vm:AssetBrowserViewModel)DataContext).DeleteVariableCommand}" CommandParameter="{Binding}" Width="24" Height="24" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="#FF5555"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </TabItem>
+    </TabControl>
 </UserControl>
