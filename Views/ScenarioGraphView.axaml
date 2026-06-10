@@ -1,0 +1,158 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MakinaEditor.ViewModels"
+             xmlns:models="using:MakinaEditor.Models"
+             x:Class="MakinaEditor.Views.ScenarioGraphView"
+             x:DataType="vm:ScenarioGraphViewModel">
+    
+    <DockPanel Background="#141416">
+        <!-- 상단 노드 추가 툴바 -->
+        <Border DockPanel.Dock="Top" Height="45" Background="#1E1E20" BorderBrush="#2D2D30" BorderThickness="0,0,0,1" Padding="10,0">
+            <Grid ColumnDefinitions="Auto, *, Auto, *, Auto">
+                <!-- 1. Flow 노드 추가 -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <TextBlock Text="➕ 플로우 노드:" VerticalAlignment="Center" Foreground="#858585" FontSize="11"/>
+                    <TextBox Name="NewFlowNameTxt" PlaceholderText="플로우명" Width="100" Height="26" FontSize="11" VerticalContentAlignment="Center" Background="#2D2D30" BorderThickness="1" BorderBrush="#3D3D42"/>
+                    <Button Content="생성" Click="AddFlow_Click" Height="26" FontSize="11" Foreground="#3498DB" Background="#2D2D30" BorderBrush="#3D3D42" BorderThickness="1"/>
+                </StackPanel>
+
+                <Border Grid.Column="1" Width="1" Height="16" Background="#2D2D30" Margin="15,0"/>
+
+                <!-- 2. 시나리오 점프 노드 추가 -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <TextBlock Text="➕ 시나리오 점프 노드:" VerticalAlignment="Center" Foreground="#858585" FontSize="11"/>
+                    <ComboBox Name="TargetScenarioCombo" ItemsSource="{Binding AvailableScenarios}" Width="110" Height="26" FontSize="11" Background="#2D2D30" BorderThickness="1" BorderBrush="#3D3D42"/>
+                    <Button Content="생성" Click="AddLink_Click" Height="26" FontSize="11" Foreground="#E67E22" Background="#2D2D30" BorderBrush="#3D3D42" BorderThickness="1"/>
+                </StackPanel>
+
+                <Border Grid.Column="3" Width="1" Height="16" Background="#2D2D30" Margin="15,0"/>
+
+                <!-- 3. 조건부 분기 노드 추가 -->
+                <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <TextBlock Text="➕ 조건부 분기 노드:" VerticalAlignment="Center" Foreground="#858585" FontSize="11"/>
+                    <TextBox Name="ConditionExprTxt" PlaceholderText="조건식 (예: gold >= 10)" Width="120" Height="26" FontSize="11" VerticalContentAlignment="Center" Background="#2D2D30" BorderThickness="1" BorderBrush="#3D3D42"/>
+                    <Button Content="생성" Click="AddConditional_Click" Height="26" FontSize="11" Foreground="#9B59B6" Background="#2D2D30" BorderBrush="#3D3D42" BorderThickness="1"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 노드 그래프 캔버스 영역 -->
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Panel Width="2000" Height="2000" Background="#141416">
+                <!-- 배경 격자무늬 -->
+                <Panel.Background>
+                    <VisualBrush TileMode="Tile" SourceRect="0,0,30,30" DestinationRect="0,0,30,30">
+                        <VisualBrush.Visual>
+                            <Canvas Width="30" Height="30">
+                                <Line StartPoint="0,0" EndPoint="30,0" Stroke="#1D1D21" StrokeThickness="1"/>
+                                <Line StartPoint="0,0" EndPoint="0,30" Stroke="#1D1D21" StrokeThickness="1"/>
+                            </Canvas>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Panel.Background>
+
+                <!-- 1. 연결선 (Edges) 레이어 -->
+                <ItemsControl ItemsSource="{Binding Edges}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Width="2000" Height="2000" Background="Transparent"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:GraphEdge">
+                            <Line StartPoint="{Binding StartPoint}"
+                                  EndPoint="{Binding EndPoint}"
+                                  Stroke="{Binding StrokeColor}"
+                                  StrokeDashArray="{Binding StrokeDash}"
+                                  StrokeThickness="2" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- 2. 노드 (Nodes) 레이어 -->
+                <ItemsControl ItemsSource="{Binding Nodes}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Width="2000" Height="2000" Background="Transparent"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    
+                    <ItemsControl.Styles>
+                        <Style Selector="ContentPresenter" x:DataType="models:GraphNodeInfo">
+                            <Setter Property="Canvas.Left" Value="{Binding X, Mode=TwoWay}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding Y, Mode=TwoWay}"/>
+                        </Style>
+                    </ItemsControl.Styles>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:GraphNodeInfo">
+                            <Border Name="NodeBorder" Width="180" CornerRadius="6" BorderThickness="1.5" 
+                                    Background="{Binding NodeBackground}"
+                                    BorderBrush="{Binding NodeBorderBrush}"
+                                    PointerPressed="Node_PointerPressed" PointerMoved="Node_PointerMoved" PointerReleased="Node_PointerReleased"
+                                    DoubleTapped="Node_DoubleTapped"
+                                    BoxShadow="0 4 10 0 #40000000">
+
+                                <Grid RowDefinitions="Auto, *">
+                                    <!-- 노드 헤더 -->
+                                    <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Height="28" Background="#15000000">
+                                        <TextBlock Grid.Column="0" Text="{Binding Title}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" Foreground="#E0E0E0" TextTrimming="CharacterEllipsis" Margin="8,0"/>
+                                        <Button Grid.Column="1" Content="✕" Width="16" Height="16" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="Transparent" BorderThickness="0" Foreground="#80FF5555" FontSize="9" Margin="0,0,8,0"
+                                                IsVisible="{Binding IsDeleteVisible}"
+                                                Command="{Binding $parent[UserControl].((vm:ScenarioGraphViewModel)DataContext).DeleteNode}" CommandParameter="{Binding}"/>
+                                    </Grid>
+
+                                    <!-- 노드 바디 -->
+                                    <StackPanel Grid.Row="1" Margin="8" Spacing="6">
+                                        <!-- (A) Start Node 바디 -->
+                                        <StackPanel IsVisible="{Binding IsStartNode}" Spacing="4">
+                                            <TextBlock Text="다음 노드 연결" FontSize="9" Foreground="#858585"/>
+                                            <ComboBox ItemsSource="{Binding $parent[UserControl].((vm:ScenarioGraphViewModel)DataContext).Nodes}" SelectedItem="{Binding TargetNode}" DisplayMemberBinding="{Binding Title}" Height="24" FontSize="10" Background="#10000000" BorderThickness="0" HorizontalAlignment="Stretch"/>
+                                        </StackPanel>
+
+                                        <!-- (B) End Node 바디 -->
+                                        <StackPanel IsVisible="{Binding IsEndNode}" Spacing="4">
+                                            <TextBlock Text="다음 시나리오 루트 연결" FontSize="9" Foreground="#858585"/>
+                                            <ComboBox ItemsSource="{Binding $parent[UserControl].((vm:ScenarioGraphViewModel)DataContext).Nodes}" SelectedItem="{Binding TargetNode}" DisplayMemberBinding="{Binding Title}" Height="24" FontSize="10" Background="#10000000" BorderThickness="0" HorizontalAlignment="Stretch"/>
+                                            <TextBlock Text="(※ 실제 플레이 전용 경로)" FontSize="8" Foreground="#E67E22" Opacity="0.7"/>
+                                        </StackPanel>
+
+                                        <!-- (C) Flow Node 바디 -->
+                                        <StackPanel IsVisible="{Binding IsFlowNode}" Spacing="4">
+                                            <TextBlock Text="바인딩된 Flow" FontSize="9" Foreground="#858585"/>
+                                            <TextBox Text="{Binding BindingId}" Height="24" FontSize="10" Background="#10000000" BorderThickness="0" IsReadOnly="True" VerticalContentAlignment="Center"/>
+                                            
+                                            <TextBlock Text="다음 노드 연결" FontSize="9" Foreground="#858585" Margin="0,2,0,0"/>
+                                            <ComboBox ItemsSource="{Binding $parent[UserControl].((vm:ScenarioGraphViewModel)DataContext).Nodes}" SelectedItem="{Binding TargetNode}" DisplayMemberBinding="{Binding Title}" Height="24" FontSize="10" Background="#10000000" BorderThickness="0" HorizontalAlignment="Stretch"/>
+                                        </StackPanel>
+
+                                        <!-- (D) Link Node 바디 -->
+                                        <StackPanel IsVisible="{Binding IsLinkNode}" Spacing="4">
+                                            <TextBlock Text="점프 타겟 시나리오" FontSize="9" Foreground="#858585"/>
+                                            <ComboBox ItemsSource="{Binding $parent[UserControl].((vm:ScenarioGraphViewModel)DataContext).AvailableScenarios}" SelectedItem="{Binding BindingId}" Height="24" FontSize="10" Background="#10000000" BorderThickness="0" HorizontalAlignment="Stretch"/>
+
+                                            <TextBlock Text="다음 연결 노드" FontSize="9" Foreground="#858585" Margin="0,2,0,0"/>
+                                            <ComboBox ItemsSource="{Binding $parent[UserControl].((vm:ScenarioGraphViewModel)DataContext).Nodes}" SelectedItem="{Binding TargetNode}" DisplayMemberBinding="{Binding Title}" Height="24" FontSize="10" Background="#10000000" BorderThickness="0" HorizontalAlignment="Stretch"/>
+                                        </StackPanel>
+
+                                        <!-- (E) Conditional Node 바디 -->
+                                        <StackPanel IsVisible="{Binding IsConditionalNode}" Margin="0" Spacing="4">
+                                            <TextBlock Text="분기 조건식" FontSize="9" Foreground="#858585"/>
+                                            <TextBox Text="{Binding Condition}" Height="24" FontSize="10" Background="#10000000" BorderThickness="0" VerticalContentAlignment="Center"/>
+
+                                            <TextBlock Text="성공 시 (True)" FontSize="9" Foreground="#2ECC71" Margin="0,2,0,0"/>
+                                            <ComboBox ItemsSource="{Binding $parent[UserControl].((vm:ScenarioGraphViewModel)DataContext).Nodes}" SelectedItem="{Binding TargetNode}" DisplayMemberBinding="{Binding Title}" Height="24" FontSize="10" Background="#10000000" BorderThickness="0" HorizontalAlignment="Stretch"/>
+
+                                            <TextBlock Text="실패 시 (False)" FontSize="9" Foreground="#E74C3C" Margin="0,2,0,0"/>
+                                            <ComboBox ItemsSource="{Binding $parent[UserControl].((vm:ScenarioGraphViewModel)DataContext).Nodes}" SelectedItem="{Binding AlternativeTargetNode}" DisplayMemberBinding="{Binding Title}" Height="24" FontSize="10" Background="#10000000" BorderThickness="0" HorizontalAlignment="Stretch"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Panel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

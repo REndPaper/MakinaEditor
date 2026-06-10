@@ -22,6 +22,7 @@ public class MainWindowViewModel : ViewModelBase
     public FlowEditorViewModel Flow { get; }
     public PreviewViewModel Preview { get; }
     public AssetBrowserViewModel Assets { get; }
+    public ScenarioGraphViewModel ScenarioGraph { get; }
 
     // --- [메인 레이아웃 및 런처 상태 제어] ---
     private bool _isProjectLoaded = false;
@@ -76,6 +77,7 @@ public class MainWindowViewModel : ViewModelBase
         Flow = new FlowEditorViewModel(this);
         Preview = new PreviewViewModel(this);
         Assets = new AssetBrowserViewModel(this);
+        ScenarioGraph = new ScenarioGraphViewModel(this);
 
         // 자동 실행 기능: 최근 항목이 있다면 즉시 로드 시도
         if (Project.RecentProjects.Count > 0)

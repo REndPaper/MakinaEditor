@@ -190,9 +190,9 @@
                     <views:FlowEditorView Grid.Column="2" DataContext="{Binding Flow}"/>
                 </Grid>
 
-                <!-- 기타 편집 모드 뷰홀더 -->
+                <!-- 시나리오 그래프 모드 뷰홀더 -->
                 <Grid IsVisible="{Binding IsScenarioMode}">
-                    <TextBlock Text="Scenario Node Graph Editor (Coming Soon)" Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <views:ScenarioGraphView DataContext="{Binding ScenarioGraph}"/>
                 </Grid>
 
                 <Grid IsVisible="{Binding IsUiDesignMode}">
