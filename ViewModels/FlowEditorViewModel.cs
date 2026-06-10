@@ -135,6 +135,7 @@ public class FlowEditorViewModel : ViewModelBase
     public void AddCharCommand(FlowCommand? target) => InsertOrAdd(target, new ShowCharCommand { CharacterId = "지우", Pose = "기본", Position = "Center" });
     public void AddBgmCommand(FlowCommand? target) => InsertOrAdd(target, new PlayBgmCommand { AssetId = "bgm_sunny_day", Volume = 1.0f });
     public void AddShaderCommand(FlowCommand? target) => InsertOrAdd(target, new ShaderCommand { ShaderId = "default_shader", Intensity = 1.0f });
+    public void AddWaitCommand(FlowCommand? target) => InsertOrAdd(target, new WaitInputCommand());
 
     // (2) 맨 처음에 삽입 (Gap 0)
     public void AddTextCommandStart() => InsertAtStart(new TextCommand { Speaker = "지우", TextContent = "새 대사..." });
@@ -142,6 +143,7 @@ public class FlowEditorViewModel : ViewModelBase
     public void AddCharCommandStart() => InsertAtStart(new ShowCharCommand { CharacterId = "지우", Pose = "기본", Position = "Center" });
     public void AddBgmCommandStart() => InsertAtStart(new PlayBgmCommand { AssetId = "bgm_sunny_day", Volume = 1.0f });
     public void AddShaderCommandStart() => InsertAtStart(new ShaderCommand { ShaderId = "default_shader", Intensity = 1.0f });
+    public void AddWaitCommandStart() => InsertAtStart(new WaitInputCommand());
 
     // (3) 맨 마지막에 추가
     public void AddTextCommandEnd() => AppendToEnd(new TextCommand { Speaker = "지우", TextContent = "새 대사..." });
@@ -149,6 +151,7 @@ public class FlowEditorViewModel : ViewModelBase
     public void AddCharCommandEnd() => AppendToEnd(new ShowCharCommand { CharacterId = "지우", Pose = "기본", Position = "Center" });
     public void AddBgmCommandEnd() => AppendToEnd(new PlayBgmCommand { AssetId = "bgm_sunny_day", Volume = 1.0f });
     public void AddShaderCommandEnd() => AppendToEnd(new ShaderCommand { ShaderId = "default_shader", Intensity = 1.0f });
+    public void AddWaitCommandEnd() => AppendToEnd(new WaitInputCommand());
 
     // (4) 노드 순서 위/아래 이동
     public void MoveCommandUp(FlowCommand target)
@@ -179,6 +182,7 @@ public class FlowEditorViewModel : ViewModelBase
     public void ChangeToChar(FlowCommand target) => ConvertCommand(target, "char");
     public void ChangeToBgm(FlowCommand target) => ConvertCommand(target, "bgm");
     public void ChangeToShader(FlowCommand target) => ConvertCommand(target, "shader");
+    public void ChangeToWait(FlowCommand target) => ConvertCommand(target, "wait");
 
     private void ConvertCommand(FlowCommand oldCommand, string targetType)
     {
@@ -214,6 +218,18 @@ public class FlowEditorViewModel : ViewModelBase
                 if (oldCommand is BgCommand b2) sh.ShaderId = b2.AssetId;
                 else if (oldCommand is PlayBgmCommand p2) sh.ShaderId = p2.AssetId;
                 newCommand = sh;
+                break;
+            case "wait":
+                var wt = new WaitInputCommand();
+                if (oldCommand is TextCommand t2)
+                {
+                    wt.Choices.Add(new ChoiceOption { Text = t2.TextContent ?? "선택지 1" });
+                }
+                else
+                {
+                    wt.Choices.Add(new ChoiceOption { Text = "선택지 1" });
+                }
+                newCommand = wt;
                 break;
             default:
                 return;
@@ -260,6 +276,30 @@ public class FlowEditorViewModel : ViewModelBase
             if (cmd is ShowCharCommand showChar)
             {
                 showChar.UpdateAvailablePoses();
+            }
+        }
+    }
+
+    // 선택지 개별 옵션 관리 메서드
+    public void AddChoiceOption(WaitInputCommand cmd)
+    {
+        if (cmd == null) return;
+        cmd.Choices.Add(new ChoiceOption { Text = $"선택지 {cmd.Choices.Count + 1}" });
+        _ = _main.Project.SaveProject();
+    }
+
+    public void RemoveChoiceOption(ChoiceOption option)
+    {
+        if (option == null) return;
+        
+        // ActiveUserFlow 순회를 통해 옵션이 속한 WaitInputCommand를 찾아 삭제
+        foreach (var cmd in ActiveUserFlow)
+        {
+            if (cmd is WaitInputCommand wt && wt.Choices.Contains(option))
+            {
+                wt.Choices.Remove(option);
+                _ = _main.Project.SaveProject();
+                break;
             }
         }
     }

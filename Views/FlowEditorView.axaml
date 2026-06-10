@@ -30,6 +30,7 @@
                     <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding AddCharCommandEnd}"/>
                     <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding AddBgmCommandEnd}"/>
                     <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding AddShaderCommandEnd}"/>
+                    <MenuItem Header="📥 선택지 분기 추가" Command="{Binding AddWaitCommandEnd}"/>
                 </MenuFlyout>
             </Button.Flyout>
         </Button>
@@ -45,6 +46,7 @@
                         <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding AddCharCommandStart}"/>
                         <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding AddBgmCommandStart}"/>
                         <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding AddShaderCommandStart}"/>
+                        <MenuItem Header="📥 선택지 분기 추가" Command="{Binding AddWaitCommandStart}"/>
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
@@ -90,6 +92,7 @@
                                                         <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="📥 선택지 분기로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToWait}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
@@ -124,6 +127,7 @@
                                         <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="📥 선택지 분기 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddWaitCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
@@ -154,6 +158,7 @@
                                                         <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="📥 선택지 분기로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToWait}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
@@ -186,6 +191,7 @@
                                         <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="📥 선택지 분기 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddWaitCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
@@ -216,6 +222,7 @@
                                                         <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="📥 선택지 분기로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToWait}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
@@ -250,6 +257,7 @@
                                         <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="📥 선택지 분기 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddWaitCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
@@ -280,6 +288,7 @@
                                                         <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="📥 선택지 분기로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToWait}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
@@ -316,6 +325,7 @@
                                         <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="📥 선택지 분기 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddWaitCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>
@@ -346,6 +356,7 @@
                                                         <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
                                                         <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="📥 선택지 분기로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToWait}" CommandParameter="{Binding}"/>
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
@@ -382,6 +393,86 @@
                                         <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
                                         <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="📥 선택지 분기 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddWaitCommand}" CommandParameter="{Binding}"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+
+                    <!-- 6. 선택지 분기 (WAIT_INPUT) -->
+                    <DataTemplate x:DataType="models:WaitInputCommand">
+                        <StackPanel>
+                            <Grid ColumnDefinitions="Auto, *">
+                                <!-- 재생 포인터 화살표 -->
+                                <TextBlock Grid.Column="0" Text="▶" Foreground="#FFD600" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"
+                                           IsVisible="{Binding $parent[ListBoxItem].IsSelected}"/>
+                                
+                                <Border Grid.Column="1" Background="#1E302B" BorderBrush="#2ECC71" BorderThickness="1,0,0,0" CornerRadius="4" Padding="10">
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <StackPanel Grid.Column="0" Spacing="8">
+                                            <!-- 유형 변경 드롭다운 헤더 -->
+                                            <Button Background="Transparent" Padding="0" BorderThickness="0" HorizontalAlignment="Left">
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock Text="📥 WAIT_INPUT" Foreground="#2ECC71" FontWeight="Bold" FontSize="10" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="▼" Foreground="#2ECC71" FontSize="8" VerticalAlignment="Center" Opacity="0.5"/>
+                                                </StackPanel>
+                                                <Button.Flyout>
+                                                    <MenuFlyout Placement="Bottom">
+                                                        <MenuItem Header="💬 대사 출력으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToText}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🌆 배경 설정으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBg}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎭 캐릭터 스탠딩으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToChar}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="🎵 BGM 재생으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToBgm}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="✨ 셰이더 적용으로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToShader}" CommandParameter="{Binding}"/>
+                                                        <MenuItem Header="📥 선택지 분기로 변경" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).ChangeToWait}" CommandParameter="{Binding}"/>
+                                                    </MenuFlyout>
+                                                </Button.Flyout>
+                                            </Button>
+
+                                            <!-- 선택지 리스트 렌더링 -->
+                                            <ItemsControl ItemsSource="{Binding Choices}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:ChoiceOption">
+                                                        <Grid ColumnDefinitions="*, 120, Auto" Margin="0,0,0,4">
+                                                            <TextBox Grid.Column="0" Text="{Binding Text}" PlaceholderText="선택지 내용 입력" Height="26" FontSize="11" VerticalContentAlignment="Center" Background="#13201D" BorderThickness="0" Margin="0,0,4,0"/>
+                                                            <ComboBox Grid.Column="1" ItemsSource="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AvailableFlows}" SelectedItem="{Binding TargetFlowId}" PlaceholderText="타겟 Flow" Height="26" FontSize="10" Background="#13201D" BorderThickness="0" Margin="0,0,4,0"/>
+                                                            <Button Grid.Column="2" Content="✕" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).RemoveChoiceOption}" CommandParameter="{Binding}" Width="22" Height="22" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#FF5555" Background="Transparent" BorderThickness="0"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+
+                                            <!-- 선택지 추가 버튼 -->
+                                            <Button Content="➕ 선택지 옵션 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddChoiceOption}" CommandParameter="{Binding}" Height="24" FontSize="10" Foreground="#2ECC71" Background="Transparent" BorderBrush="#2ECC71" BorderThickness="1"/>
+                                        </StackPanel>
+
+                                        <!-- 조작 버튼 영역 (위, 아래, 삭제) -->
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="5,0,0,0" Spacing="2">
+                                            <Button Content="▲" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandUp}" CommandParameter="{Binding}"
+                                                    Background="Transparent" Foreground="#858585" ToolTip.Tip="위로 이동"/>
+                                            <Button Content="▼" Width="20" Height="20" Padding="0" FontSize="9" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).MoveCommandDown}" CommandParameter="{Binding}"
+                                                    Background="Transparent" Foreground="#858585" ToolTip.Tip="아래로 이동"/>
+                                            <Button Content="✕" Width="20" Height="20" Padding="0" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                    Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).RemoveCommand}" CommandParameter="{Binding}"
+                                                    Background="Transparent" Foreground="#FF5555" ToolTip.Tip="삭제"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                            
+                            <!-- 인라인 추가 버튼 -->
+                            <Button Content="➕" Width="22" Height="22" CornerRadius="11"
+                                    HorizontalAlignment="Center" Opacity="0.3" Margin="0,5,0,0">
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuItem Header="💬 대사 출력 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddTextCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🌆 배경 설정 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎭 캐릭터 스탠딩 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddCharCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="🎵 BGM 재생 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddBgmCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="✨ 셰이더 적용 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddShaderCommand}" CommandParameter="{Binding}"/>
+                                        <MenuItem Header="📥 선택지 분기 추가" Command="{Binding $parent[UserControl].((vm:FlowEditorViewModel)DataContext).AddWaitCommand}" CommandParameter="{Binding}"/>
                                     </MenuFlyout>
                                 </Button.Flyout>
                             </Button>

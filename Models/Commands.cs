@@ -24,6 +24,7 @@ public class ScenarioCommand
 [JsonDerivedType(typeof(ShowCharCommand), typeDiscriminator: "char")]
 [JsonDerivedType(typeof(PlayBgmCommand), typeDiscriminator: "bgm")]
 [JsonDerivedType(typeof(ShaderCommand), typeDiscriminator: "shader")]
+[JsonDerivedType(typeof(WaitInputCommand), typeDiscriminator: "wait_input")]
 public abstract class FlowCommand : ReactiveObject
 {
     public Core.FlowOpcode Opcode { get; protected set; }
@@ -157,4 +158,36 @@ public class ShaderCommand : FlowCommand
     }
 
     public ShaderCommand() { Opcode = Core.FlowOpcode.APPLY_SHADER; }
+}
+
+// 6. 선택지 및 입력 대기 명령어
+public class ChoiceOption : ReactiveObject
+{
+    private string _text = "선택지...";
+    public string Text 
+    { 
+        get => _text; 
+        set => this.RaiseAndSetIfChanged(ref _text, value); 
+    }
+
+    private string? _targetFlowId;
+    public string? TargetFlowId 
+    { 
+        get => _targetFlowId; 
+        set => this.RaiseAndSetIfChanged(ref _targetFlowId, value); 
+    }
+
+    private string? _condition;
+    public string? Condition 
+    { 
+        get => _condition; 
+        set => this.RaiseAndSetIfChanged(ref _condition, value); 
+    }
+}
+
+public class WaitInputCommand : FlowCommand
+{
+    public ObservableCollection<ChoiceOption> Choices { get; set; } = new();
+    
+    public WaitInputCommand() { Opcode = Core.FlowOpcode.WAIT_INPUT; }
 }
