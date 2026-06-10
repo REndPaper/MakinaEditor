@@ -277,6 +277,7 @@ public class ProjectViewModel : ViewModelBase
 
     public void CloseProject()
     {
+        _main.UndoRedo.Clear();
         _main.IsProjectLoaded = false;
         CurrentProjectPath = null;
         ProjectName = "Untitled Project";

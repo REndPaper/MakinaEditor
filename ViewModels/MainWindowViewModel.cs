@@ -2,12 +2,19 @@ using System;
 using System.IO;
 using ReactiveUI;
 using MakinaEditor.Core;
+using MakinaEditor.Services;
 
 namespace MakinaEditor.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
     public static MainWindowViewModel? Instance { get; private set; }
+
+    // --- [서비스 및 히스토리 중앙 관리] ---
+    public UndoRedoService UndoRedo { get; }
+
+    public System.Windows.Input.ICommand UndoCommand { get; }
+    public System.Windows.Input.ICommand RedoCommand { get; }
 
     // --- [서브 ViewModels] ---
     public ProjectViewModel Project { get; }
@@ -50,6 +57,18 @@ public class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         Instance = this;
+
+        // 히스토리 서비스 초기화
+        UndoRedo = new UndoRedoService();
+
+        UndoCommand = ReactiveCommand.Create(
+            () => UndoRedo.Undo(),
+            this.WhenAnyValue(x => x.UndoRedo.CanUndo)
+        );
+        RedoCommand = ReactiveCommand.Create(
+            () => UndoRedo.Redo(),
+            this.WhenAnyValue(x => x.UndoRedo.CanRedo)
+        );
 
         // 서브 ViewModel 인스턴스 생성 (Mediator 패턴 적용을 위해 parent 주입)
         Project = new ProjectViewModel(this);

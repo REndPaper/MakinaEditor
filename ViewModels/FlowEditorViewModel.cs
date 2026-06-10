@@ -157,9 +157,8 @@ public class FlowEditorViewModel : ViewModelBase
         int index = ActiveUserFlow.IndexOf(target);
         if (index > 0)
         {
-            ActiveUserFlow.Move(index, index - 1);
-            SelectedCommand = target;
-            _main.Preview.UpdatePreviewState();
+            var action = new MoveCommandAction(ActiveUserFlow, target, index, index - 1, this);
+            _main.UndoRedo.Execute(action);
         }
     }
 
@@ -169,9 +168,8 @@ public class FlowEditorViewModel : ViewModelBase
         int index = ActiveUserFlow.IndexOf(target);
         if (index >= 0 && index < ActiveUserFlow.Count - 1)
         {
-            ActiveUserFlow.Move(index, index + 1);
-            SelectedCommand = target;
-            _main.Preview.UpdatePreviewState();
+            var action = new MoveCommandAction(ActiveUserFlow, target, index, index + 1, this);
+            _main.UndoRedo.Execute(action);
         }
     }
 
@@ -221,50 +219,38 @@ public class FlowEditorViewModel : ViewModelBase
                 return;
         }
 
-        ActiveUserFlow[index] = newCommand;
-        SelectedCommand = newCommand;
-        _main.Preview.UpdatePreviewState();
+        var action = new ConvertCommandAction(ActiveUserFlow, oldCommand, newCommand, index, this);
+        _main.UndoRedo.Execute(action);
     }
 
     // (6) 삭제
     public void RemoveCommand(FlowCommand target)
     {
+        if (target == null) return;
         int index = ActiveUserFlow.IndexOf(target);
-        ActiveUserFlow.Remove(target);
-        if (SelectedCommand == target)
-        {
-            if (ActiveUserFlow.Count > 0)
-            {
-                SelectedCommand = ActiveUserFlow[Math.Max(0, index - 1)];
-            }
-            else
-            {
-                SelectedCommand = null;
-            }
-        }
-        else
-        {
-            _main.Preview.UpdatePreviewState();
-        }
+        if (index < 0) return;
+
+        var action = new RemoveCommandAction(ActiveUserFlow, target, index, this);
+        _main.UndoRedo.Execute(action);
     }
 
     private void InsertOrAdd(FlowCommand? target, FlowCommand newNode)
     {
-        if (target == null) ActiveUserFlow.Insert(0, newNode);
-        else ActiveUserFlow.Insert(ActiveUserFlow.IndexOf(target) + 1, newNode);
-        SelectedCommand = newNode;
+        int index = (target == null) ? 0 : ActiveUserFlow.IndexOf(target) + 1;
+        var action = new AddCommandAction(ActiveUserFlow, newNode, index, this);
+        _main.UndoRedo.Execute(action);
     }
 
     private void InsertAtStart(FlowCommand newNode)
     {
-        ActiveUserFlow.Insert(0, newNode);
-        SelectedCommand = newNode;
+        var action = new AddCommandAction(ActiveUserFlow, newNode, 0, this);
+        _main.UndoRedo.Execute(action);
     }
 
     private void AppendToEnd(FlowCommand newNode)
     {
-        ActiveUserFlow.Add(newNode);
-        SelectedCommand = newNode;
+        var action = new AddCommandAction(ActiveUserFlow, newNode, ActiveUserFlow.Count, this);
+        _main.UndoRedo.Execute(action);
     }
 
     public void RefreshAllShowCharCommandsPoses()
