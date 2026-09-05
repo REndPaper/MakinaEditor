@@ -47,7 +47,11 @@ C#과 Avalonia로 개발하는 비주얼노벨 저작 도구입니다. 시나리
 
 ### 명령 직렬화와 프리뷰
 
-[Commands](Models/Commands.cs)에서 명령별 타입과 속성을 정의하고, `JsonPolymorphic`·`JsonDerivedType`으로 저장 타입을 구분합니다. [PreviewViewModel](ViewModels/PreviewViewModel.cs)은 선택한 위치까지의 명령을 반영해 프리뷰 상태를 구성합니다. 이미지 객체는 캐시하고 캐시 정리 시 `Dispose`합니다.
+[Commands](Models/Commands.cs)에서 명령별 타입과 속성을 정의하고, `JsonPolymorphic`·`JsonDerivedType`으로 저장 타입을 구분합니다. [PreviewViewModel](ViewModels/PreviewViewModel.cs)은 선택한 위치까지의 명령을 반영해 프리뷰 상태를 구성합니다.
+
+별도의 프리뷰 상태를 편집 데이터와 이중으로 저장하지 않고, 선택 지점까지 명령을 다시 적용해 표시 상태를 구성하도록 했습니다. 편집 데이터와 미리보기 상태의 동기화 지점을 줄이고, 특정 위치의 결과를 같은 명령 데이터에서 재구성하기 위한 선택입니다.
+
+이미지 객체는 캐시하고 캐시 정리 시 `Dispose`합니다.
 
 ## 실행 준비
 
